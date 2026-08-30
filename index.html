@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NutriSense X — Intelligent Nutrition Companion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f4f7f1;--card:#fff;--text:#17371f;--muted:#708173;--green:#176b3a;--green2:#2d9a59;--lime:#b7df78;--soft:#e9f4e8;--line:#e1e9df;--gold:#e8a33b;--red:#dc665e;--blue:#4b8ecf;--shadow:0 18px 50px rgba(22,66,35,.10)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text)}body.dark{--bg:#0d1710;--card:#142319;--text:#eef8ee;--muted:#a2b3a4;--soft:#1d3524;--line:#29432f;--shadow:0 18px 50px rgba(0,0,0,.3)}button,input,select{font:inherit}button{cursor:pointer}.hidden{display:none!important}
+#landing{min-height:100vh;background:radial-gradient(circle at 80% 15%,#d7f0b2 0,transparent 27%),linear-gradient(135deg,#f7fbf5,#e9f3e6);overflow:hidden}body.dark #landing{background:radial-gradient(circle at 80% 15%,#1f4d2a 0,transparent 27%),var(--bg)}
+.land-nav{max-width:1180px;margin:auto;padding:22px 24px;display:flex;align-items:center;justify-content:space-between}.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:25px;letter-spacing:-1px}.logo-mark{width:40px;height:40px;border-radius:14px;background:linear-gradient(135deg,var(--lime),var(--green2));display:grid;place-items:center}.pill{border:1px solid var(--line);background:var(--card);padding:8px 13px;border-radius:50px;font-size:12px;font-weight:700;color:var(--green)}
+.land-hero{max-width:1180px;margin:45px auto 0;padding:25px;display:grid;grid-template-columns:1.05fr .95fr;gap:55px;align-items:center}.land-copy h1{font-family:'Playfair Display',serif;font-size:clamp(45px,7vw,78px);line-height:1.02;letter-spacing:-3px;margin:18px 0}.land-copy h1 em{font-style:normal;color:var(--green2)}.land-copy p{font-size:18px;line-height:1.7;color:var(--muted);max-width:610px}.cta{border:0;border-radius:14px;padding:15px 21px;background:var(--green);color:#fff;font-weight:800;font-size:15px;box-shadow:0 14px 30px rgba(23,107,58,.22)}.cta.alt{background:var(--card);color:var(--green);border:1px solid var(--line);box-shadow:none}.cta-row{display:flex;gap:12px;margin-top:27px;flex-wrap:wrap}.trust{display:flex;gap:24px;margin-top:28px;color:var(--muted);font-size:12px}.trust b{color:var(--text)}
+.phone{width:min(390px,100%);margin:auto;background:#173a22;border:9px solid #173a22;border-radius:38px;padding:10px;box-shadow:0 35px 80px rgba(23,56,31,.28);transform:rotate(3deg);position:relative}.phone:after{content:"✨ AI-powered insights";position:absolute;right:-55px;top:30px;background:#fff;color:#176b3a;padding:10px 13px;border-radius:12px;box-shadow:var(--shadow);font-weight:700;font-size:12px;transform:rotate(-5deg)}.phone-screen{background:#f5f8f2;border-radius:29px;padding:18px;min-height:540px;color:#17371f}.mini-head{display:flex;justify-content:space-between;align-items:center;font-size:12px}.mini-welcome{margin:22px 0}.mini-welcome h3{font-size:25px;margin:0}.mini-score{background:linear-gradient(135deg,#1d7140,#49a968);color:#fff;padding:17px;border-radius:21px}.scoreline{display:flex;justify-content:space-between;align-items:center}.scorebubble{width:74px;height:74px;border:7px solid #b9e27a;border-radius:50%;display:grid;place-items:center;font-size:23px;font-weight:800}.mini-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}.mini-stat{background:#fff;border-radius:16px;padding:13px}.mini-stat b{font-size:18px}.mini-progress{height:7px;background:#e7f0e5;border-radius:20px;margin-top:9px}.mini-progress i{display:block;height:100%;background:#2e9657;border-radius:20px}
+.app{display:flex;min-height:100vh}
+.side{width:255px;background:linear-gradient(180deg,#143a22,#0f2d1a);color:#fff;padding:20px 15px;position:fixed;height:100vh;z-index:8;box-sizing:border-box;display:flex;flex-direction:column;overflow-y:auto;overscroll-behavior:contain}
+.side .logo{font-size:23px;flex:none}.side-sub{font-size:10px;letter-spacing:1.8px;color:#a5c6ac;margin:4px 0 18px 50px;flex:none}
+.nav{display:flex;flex-direction:column;gap:3px;flex:none}
+.nav button{border:0;background:transparent;color:#c4d7c8;text-align:left;border-radius:12px;padding:10px 13px;font-size:13px;line-height:1.15;min-height:38px;white-space:nowrap}
+.nav button:hover,.nav button.active{background:rgba(255,255,255,.1);color:#fff}
+.side-score{position:relative;bottom:auto;left:auto;right:auto;margin-top:16px;background:linear-gradient(135deg,rgba(118,181,132,.20),rgba(255,255,255,.07));border:1px solid rgba(183,223,120,.16);padding:14px 15px;border-radius:18px;flex:none;overflow:hidden}
+.side-score:before{content:"";position:absolute;width:95px;height:95px;border-radius:50%;right:-28px;top:-42px;background:rgba(183,223,120,.08)}
+.side-score>*{position:relative;z-index:1}.side-score strong{font-size:21px;letter-spacing:.2px;display:inline-block;margin:3px 0}.side-score small{line-height:1.35;display:block}
+.main{margin-left:255px;width:calc(100% - 255px);padding:28px 34px}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}.eyebrow{font-size:11px;color:var(--green2);font-weight:800;letter-spacing:1.5px;text-transform:uppercase}.top h1{margin:4px 0;font-size:29px}.top-actions{display:flex;gap:9px;align-items:center}.icon{width:42px;height:42px;border-radius:13px;border:1px solid var(--line);background:var(--card);color:var(--text)}.avatar{width:42px;height:42px;border-radius:14px;background:linear-gradient(135deg,var(--lime),var(--green2));display:grid;place-items:center;color:white;font-weight:800}
+.page{display:none}.page.active{display:block}.card{background:var(--card);border:1px solid var(--line);border-radius:21px;padding:20px;box-shadow:var(--shadow)}.grid{display:grid;gap:17px}.hero-grid{grid-template-columns:1.25fr .75fr}.welcome{background:linear-gradient(125deg,#146337,#2e9957);color:#fff;min-height:225px;position:relative;overflow:hidden}.welcome:after{content:"🥗";position:absolute;right:25px;bottom:-35px;font-size:150px;opacity:.16}.welcome h2{font-size:32px;margin:9px 0}.welcome p{max-width:65%;color:#dcf1df;line-height:1.55}.chips{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0}.chips span{font-size:10px;background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.17);padding:6px 9px;border-radius:30px}
+.section-title{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}.section-title h2,.section-title h3{margin:0}.muted{color:var(--muted)}.score-card{display:flex;flex-direction:column;justify-content:space-between}.ring{--p:78;width:145px;height:145px;border-radius:50%;background:conic-gradient(var(--green2) calc(var(--p)*1%),var(--soft) 0);display:grid;place-items:center;position:relative}.ring:after{content:"";position:absolute;width:116px;height:116px;border-radius:50%;background:var(--card)}.ring strong,.ring span{z-index:1}.ring strong{font-size:32px;line-height:1}.ring span{position:absolute;top:92px;margin:0;font-size:10px;color:var(--muted);line-height:1}
+.score-body{display:flex;align-items:center;gap:20px}.breakdown{display:flex;flex-direction:column;gap:7px;width:100%}.break{display:grid;grid-template-columns:1fr 35px;gap:7px;font-size:11px}.break .track{grid-column:1/-1;height:6px;background:var(--soft);border-radius:10px}.break i{display:block;height:100%;border-radius:10px;background:var(--green2)}
+.stats{grid-template-columns:repeat(4,1fr);margin:17px 0}.stat h4{margin:0 0 10px;color:var(--muted);font-size:11px}.stat b{font-size:24px}.progress{height:7px;background:var(--soft);border-radius:20px;margin-top:12px;overflow:hidden}.progress i{display:block;height:100%;background:var(--green2);border-radius:20px}.quick{grid-template-columns:repeat(4,1fr);margin:17px 0}.quick .card{cursor:pointer;transition:.2s}.quick .card:hover{transform:translateY(-4px);border-color:var(--lime)}.quick span{font-size:25px}.quick b{display:block;margin-top:7px;font-size:13px}.quick small{color:var(--muted)}
+.split{grid-template-columns:1.05fr .95fr}.meal{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}.meal:last-child{border:0}.food-ico{width:43px;height:43px;border-radius:13px;background:var(--soft);display:grid;place-items:center}.meal .right{margin-left:auto;text-align:right}.tiny-btn,.soft-btn{border:0;border-radius:10px;padding:9px 12px;font-size:12px;font-weight:700}.soft-btn{background:var(--soft);color:var(--green)}.primary{background:var(--green);color:#fff;border:0;border-radius:11px;padding:11px 15px;font-weight:800}.insight{background:linear-gradient(135deg,#edf8e7,#d9efd2);border-left:4px solid var(--green2)}body.dark .insight{background:#193625}
+.challenge{background:linear-gradient(135deg,#fff5dc,#fff);border:1px solid #f2d998}.challenge .challenge-row{display:flex;gap:14px;align-items:center}.challenge-icon{font-size:34px}.challenge .progress{margin:10px 0 0}.search{width:100%;border:1px solid var(--line);background:var(--bg);color:var(--text);border-radius:13px;padding:13px 15px;outline:none}.food-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:11px;margin-top:14px}.food{border:1px solid var(--line);border-radius:15px;padding:13px;display:flex;align-items:center;justify-content:space-between}.food small{color:var(--muted)}.scan{border:2px dashed var(--green2);text-align:center;padding:28px;border-radius:18px;background:var(--soft);margin-bottom:15px}.scan input{display:none}.scan label{display:inline-block;margin-top:10px;background:var(--green);color:#fff;padding:10px 14px;border-radius:10px;font-size:12px;font-weight:800;cursor:pointer}.scan-result{margin-top:12px;text-align:left}.planner{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.plan{border-top:5px solid var(--green2)}.plan h3{margin:12px 0 6px}.tag{display:inline-block;background:var(--soft);color:var(--green);padding:5px 8px;border-radius:20px;font-size:10px;font-weight:700}.coach-grid,.guide-grid,.achievement-grid,.grocery-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.coach .emoji,.guide .emoji{font-size:28px}.coach h3,.guide h3{font-size:16px;margin:9px 0}.coach p,.guide p{font-size:13px;line-height:1.5}.analytics-top{grid-template-columns:1.1fr .9fr}.bars{height:230px;display:flex;align-items:flex-end;gap:12px;padding:20px 5px}.bar{flex:1;background:linear-gradient(to top,var(--green),var(--lime));border-radius:10px 10px 2px 2px;position:relative}.bar span{position:absolute;bottom:-23px;left:50%;transform:translateX(-50%);font-size:10px;color:var(--muted)}.metric{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.metric .card{text-align:center;padding:15px}.metric b{display:block;font-size:25px;margin-top:4px}.water-wrap{display:flex;justify-content:center;padding:20px}.water-actions{display:flex;gap:10px}.water-actions button{flex:1;border:1px solid var(--line);background:var(--soft);color:var(--green);padding:13px;border-radius:12px;font-weight:800}.achievement{text-align:center;padding:24px}.badge{font-size:43px}.locked{opacity:.42;filter:grayscale(1)}.profile-form{display:grid;grid-template-columns:repeat(2,1fr);gap:13px}.profile-form label{font-size:11px;font-weight:800}.profile-form input,.profile-form select{width:100%;display:block;margin-top:6px;padding:11px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--text)}.grocery label{display:block;padding:7px 0;font-size:13px}.toast{position:fixed;bottom:25px;right:25px;background:#12351f;color:#fff;padding:13px 17px;border-radius:13px;box-shadow:var(--shadow);transform:translateY(100px);opacity:0;transition:.3s;z-index:20}.toast.show{transform:none;opacity:1}.modal-wrap{position:fixed;inset:0;background:rgba(7,20,10,.58);z-index:30;display:grid;place-items:center;padding:20px}.modal{width:min(560px,100%);background:var(--card);border-radius:25px;padding:25px;box-shadow:0 30px 100px rgba(0,0,0,.35)}.modal h2{margin-top:0}.onboard-options{display:grid;grid-template-columns:1fr 1fr;gap:10px}.option{border:1px solid var(--line);background:var(--bg);padding:15px;border-radius:14px;text-align:left}.option.selected{border-color:var(--green2);background:var(--soft)}
+@media(max-height:760px) and (min-width:951px){.side{padding-top:14px;padding-bottom:14px}.side-sub{margin-bottom:10px}.nav button{padding:8px 11px;min-height:34px}.side-score{margin-top:10px;padding:11px 13px}.side-score strong{font-size:19px}}\n@media(max-width:950px){.land-hero{grid-template-columns:1fr}.phone{transform:none}.side{width:72px;padding:18px 8px}.side .logo,.side-sub,.side-score{display:none}.nav button{font-size:0;text-align:center;padding:12px 3px}.main{margin-left:72px;width:calc(100% - 72px);padding:24px}.hero-grid,.split,.analytics-top{grid-template-columns:1fr}.stats,.quick{grid-template-columns:repeat(2,1fr)}.coach-grid,.guide-grid,.achievement-grid{grid-template-columns:repeat(2,1fr)}.planner{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.land-hero{margin-top:10px;padding:18px}.land-copy h1{font-size:50px}.trust{gap:10px;flex-wrap:wrap}.side{position:fixed;top:auto;bottom:0;width:100%;height:60px;padding:4px;z-index:9}.nav{flex-direction:row;justify-content:space-around}.nav button{font-size:0}.nav button:nth-child(n+6){display:none}.main{margin-left:0;width:100%;padding:17px 13px 78px}.top h1{font-size:23px}.stats,.quick,.food-grid,.profile-form,.metric{grid-template-columns:1fr}.coach-grid,.guide-grid,.achievement-grid,.grocery-grid,.planner{grid-template-columns:1fr}.welcome p{max-width:88%}.score-body{flex-direction:column}.top-actions .icon:nth-child(2){display:none}}
+
+/* ULTRA PRO MAX */
+:root{--purple:#7657d9;--cyan:#48b8c9}.top{position:sticky;top:0;z-index:6;background:linear-gradient(var(--bg) 70%,transparent);backdrop-filter:blur(10px)}.ai-strip{background:linear-gradient(100deg,#153d24,#245d38 45%,#176a70);color:#fff;border-radius:19px;padding:16px 18px;display:flex;justify-content:space-between;gap:15px;align-items:center;margin:0 0 17px}.live-orb{width:9px;height:9px;border-radius:50%;background:#46d36b;display:inline-block;margin-right:6px;box-shadow:0 0 12px #46d36b}.pro-chip{padding:6px 9px;border-radius:99px;font-size:10px;font-weight:800;background:#eee8ff;color:#7657d9}.heatmap{display:grid;grid-template-columns:repeat(7,1fr);gap:7px}.heat{aspect-ratio:1;border-radius:7px;background:var(--soft)}.l1{background:#d7e9bd}.l2{background:#acd66f}.l3{background:#5eaf65}.l4{background:#176b3a}.macro-donut{width:180px;height:180px;border-radius:50%;background:conic-gradient(var(--green2) 0 32%,var(--gold) 32% 59%,var(--purple) 59% 100%);display:grid;place-items:center;margin:15px auto}.macro-donut>div{width:122px;height:122px;background:var(--card);border-radius:50%;display:grid;place-items:center;text-align:center}.timeline{position:relative;padding-left:22px}.timeline:before{content:"";position:absolute;left:6px;top:5px;bottom:5px;width:2px;background:var(--line)}.timeline-item{position:relative;padding:0 0 18px}.timeline-item:before{content:"";position:absolute;width:10px;height:10px;border-radius:50%;background:var(--green2);left:-20px;top:4px}.focus-card{background:linear-gradient(135deg,#f4ffe7,#e8f8f1);border:1px solid #d6ecd8}.insight-feed{display:flex;flex-direction:column;gap:10px}.feed-item{padding:13px;border:1px solid var(--line);border-radius:15px;display:flex;gap:10px}.command-palette{position:fixed;inset:0;background:rgba(5,18,9,.56);z-index:60;display:grid;place-items:start center;padding-top:12vh;backdrop-filter:blur(6px)}.command-box{width:min(650px,92vw);background:var(--card);border:1px solid var(--line);border-radius:24px;padding:16px;box-shadow:0 30px 100px rgba(0,0,0,.35)}.command-box input{width:100%;padding:15px;border:0;border-bottom:1px solid var(--line);outline:none;background:transparent;color:var(--text);font-size:16px}.command-item{width:100%;text-align:left;background:transparent;border:0;padding:13px;border-radius:12px;color:var(--text)}.command-item:hover{background:var(--soft)}.fab{position:fixed;right:28px;bottom:25px;width:55px;height:55px;border:0;border-radius:18px;background:linear-gradient(135deg,var(--green),var(--cyan));color:#fff;font-size:23px;box-shadow:0 18px 35px rgba(23,107,58,.25);z-index:12}.demo-tip{border:1px dashed var(--green2);padding:10px;border-radius:12px;font-size:11px;background:var(--soft);color:var(--green);margin-top:10px}@media(max-width:600px){.ai-strip{flex-direction:column;align-items:flex-start}.fab{right:17px;bottom:76px}}
+
+/* ===== LEGENDARY COMPETITION EDITION ===== */
+:root{--neon:#7CFFB2;--ink:#07130c}.wow-hero{position:relative;overflow:hidden;background:radial-gradient(circle at 12% 15%,rgba(124,255,178,.25),transparent 25%),radial-gradient(circle at 88% 12%,rgba(118,87,217,.25),transparent 30%),linear-gradient(135deg,#071d12,#143f2b 55%,#173d4b);color:#fff;border-radius:26px;padding:28px;min-height:310px}.wow-hero:after{content:"";position:absolute;width:420px;height:420px;border-radius:50%;border:1px solid rgba(124,255,178,.25);right:-160px;bottom:-250px;box-shadow:0 0 0 45px rgba(124,255,178,.04),0 0 0 90px rgba(124,255,178,.03)}.wow-hero h2{font-size:clamp(28px,4vw,48px);max-width:650px;margin:12px 0}.wow-hero p{max-width:600px;color:#d5eee0;line-height:1.65}.signal{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);padding:8px 12px;border-radius:99px;font-size:11px;font-weight:800}.signal i{width:8px;height:8px;border-radius:50%;background:var(--neon);box-shadow:0 0 18px var(--neon)}.wow-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}.glass-btn{border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.1);color:#fff;padding:12px 15px;border-radius:12px;font-weight:800}.neural-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:17px;margin-top:17px}.radar{height:280px;position:relative;border-radius:22px;background:repeating-radial-gradient(circle at center,rgba(45,154,89,.16) 0 1px,transparent 2px 46px),linear-gradient(135deg,var(--soft),transparent);overflow:hidden}.radar:before,.radar:after{content:"";position:absolute;left:50%;top:50%;background:rgba(45,154,89,.16);transform:translate(-50%,-50%)}.radar:before{width:1px;height:100%}.radar:after{height:1px;width:100%}.radar-dot{position:absolute;width:14px;height:14px;border-radius:50%;background:var(--green2);box-shadow:0 0 0 7px rgba(45,154,89,.12),0 0 25px rgba(45,154,89,.8)}.radar-dot:nth-child(1){left:28%;top:30%}.radar-dot:nth-child(2){left:66%;top:42%;background:var(--gold)}.radar-dot:nth-child(3){left:48%;top:70%;background:var(--purple)}.radar-dot:nth-child(4){left:76%;top:20%;background:var(--cyan)}.mission{background:linear-gradient(135deg,#f7ffe9,#e8fff4);border:1px solid #cfe9d5}.mission h3{margin:0}.mission-step{display:flex;gap:11px;padding:13px 0;border-bottom:1px solid var(--line)}.mission-step:last-child{border:0}.step-num{width:27px;height:27px;border-radius:9px;background:var(--green);color:#fff;display:grid;place-items:center;font-size:11px;font-weight:800;flex:none}.pulse-card{position:relative;overflow:hidden}.pulse-line{height:42px;margin:12px 0;background:linear-gradient(90deg,transparent 0 3%,var(--green2) 3% 6%,transparent 6% 12%,var(--green2) 12% 17%,transparent 17% 25%,var(--green2) 25% 31%,transparent 31% 40%,var(--green2) 40% 46%,transparent 46% 100%);mask-image:linear-gradient(10deg,transparent 35%,#000 45%,#000 55%,transparent 65%)}.stage{display:flex;gap:8px;flex-wrap:wrap}.stage button{border:1px solid var(--line);background:var(--card);padding:9px 11px;border-radius:10px;color:var(--text);font-size:11px;font-weight:800}.stage button.active{background:var(--green);color:#fff;border-color:var(--green)}.compare{display:grid;grid-template-columns:1fr 1fr;gap:10px}.compare-box{padding:18px;border-radius:18px;border:1px solid var(--line)}.compare-box.after{background:linear-gradient(135deg,#153d24,#24633d);color:#fff}.compare-box b{font-size:28px}.demo-overlay{position:fixed;inset:0;z-index:100;background:radial-gradient(circle at 50% 0,#1b5e38,#06110a 70%);color:#fff;display:grid;place-items:center;padding:24px}.demo-shell{width:min(900px,100%)}.demo-progress{height:7px;background:rgba(255,255,255,.15);border-radius:99px;margin:18px 0}.demo-progress i{display:block;height:100%;width:0;background:var(--neon);border-radius:99px;transition:.45s}.demo-kicker{letter-spacing:2px;font-size:11px;color:var(--neon);font-weight:800}.demo-shell h1{font-size:clamp(38px,7vw,78px);margin:14px 0;line-height:.98}.demo-shell p{font-size:18px;color:#c9d9ce;max-width:680px;line-height:1.7}.demo-controls{display:flex;justify-content:space-between;align-items:center;margin-top:28px}.demo-controls button{border:0;background:#fff;color:#143a22;padding:13px 18px;border-radius:12px;font-weight:800}.score-glow{animation:scoreGlow 2.3s infinite}@keyframes scoreGlow{50%{filter:drop-shadow(0 0 18px rgba(124,255,178,.55))}}@media(max-width:700px){.neural-grid,.compare{grid-template-columns:1fr}.wow-hero{padding:22px}.demo-controls{gap:12px}.demo-shell p{font-size:15px}}
+
+/* ===== GODLEVEL DASHBOARD UPGRADE ===== */
+:root{--blue:#3677d9;--orange:#f59d17;--purple:#7650c7}
+.main{padding:20px 34px 40px;max-width:1800px}
+.top{margin-bottom:16px}.top h1{font-size:30px;letter-spacing:.2px}
+.god-hero{min-height:170px;border:1px solid var(--line);border-radius:25px;padding:28px;display:grid;grid-template-columns:1.15fr 1.65fr 170px;gap:20px;align-items:center;overflow:hidden;position:relative;background:radial-gradient(circle at 75% 25%,rgba(203,233,125,.42),transparent 24%),linear-gradient(105deg,#d9efed 0%,#eff4d5 58%,#d7e8cb 100%);box-shadow:var(--shadow)}
+.god-hero:before{content:"";position:absolute;inset:auto -8% -70% 48%;height:260px;background:radial-gradient(circle,rgba(38,117,63,.18),transparent 65%);pointer-events:none}.god-copy,.god-focus,.bot-orb{position:relative;z-index:1}
+.god-kicker{font-size:11px;font-weight:800;letter-spacing:1.2px}.god-copy h2{font-size:27px;margin:10px 0}.god-copy p{max-width:500px;line-height:1.55;font-size:14px;color:#365042;margin:0}
+.god-focus{display:flex;background:rgba(255,255,255,.68);border:1px solid rgba(255,255,255,.7);border-radius:18px;padding:14px;gap:10px;box-shadow:0 12px 30px rgba(20,70,30,.08)}.focus-pill{display:flex;align-items:center;gap:9px;padding:5px 12px;border-right:1px solid #dde6da;flex:1}.focus-pill:last-child{border:0}.focus-pill span{display:grid;gap:4px}.focus-pill b{font-size:11px}.focus-pill small{font-size:12px;color:var(--muted);white-space:nowrap}
+.bot-orb{font-size:92px;filter:drop-shadow(0 15px 18px rgba(25,90,35,.2));text-align:center}
+.god-metrics{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px;margin:18px 0}.god-metric{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:17px;box-shadow:var(--shadow)}.metric-head{display:flex;gap:7px;align-items:center;font-size:12px;color:var(--muted);font-weight:700}.god-metric>b{display:block;font-size:21px;margin:12px 0}.god-metric small{font-size:13px}.god-metric .progress{height:5px}.god-metric .progress i{width:68%;background:var(--green2)}.metric-foot{display:flex;justify-content:space-between;font-size:11px;margin-top:8px;color:var(--muted)}.metric-foot strong{color:var(--green)}.orange .progress i{background:var(--orange)}.orange .metric-foot strong{color:#c77705}.purple .progress i{background:var(--purple)}.purple .metric-foot strong{color:var(--purple)}.blue .progress i{background:var(--blue)}.blue .metric-foot strong{color:var(--blue)}
+.god-main-grid{display:grid;grid-template-columns:1.05fr .95fr .9fr;gap:17px;align-items:stretch}.food-story-card{min-height:365px}.food-story-card .meal{padding:12px 0}.meal-cta{width:100%;border:0;border-radius:12px;padding:11px;background:linear-gradient(90deg,#125f34,#207d43);color:#fff;font-weight:800;margin-top:8px}.god-score{min-height:365px}.god-score-layout{display:flex;align-items:center;gap:22px;margin:8px 0}.big-ring{width:148px;height:148px;flex:none;--p:87;background:conic-gradient(var(--green2) calc(var(--p)*1%),var(--soft) 0)}.big-ring:after{width:118px;height:118px}.big-ring strong{font-size:39px}.big-ring span{top:96px;font-size:11px}.score-breakdown{display:grid;gap:12px;flex:1}.score-breakdown>div{display:grid;grid-template-columns:1fr auto;gap:4px;font-size:11px}.score-breakdown .track{grid-column:1/-1;height:5px;background:var(--soft);border-radius:8px}.score-breakdown i{height:100%;display:block;border-radius:8px;background:var(--green2)}.score-status{text-align:center;display:grid;gap:4px;margin:6px 0 12px}.score-status b{color:var(--green);font-size:15px}.score-status span{font-size:11px;color:var(--muted)}.score-link{border:0;background:linear-gradient(90deg,#e3eee4,#eff4e5);width:100%;padding:11px;border-radius:12px;color:var(--green);font-weight:800}.right-stack{display:grid;grid-template-rows:1.45fr .9fr;gap:17px}.action-card{background:linear-gradient(120deg,var(--card),#eef6df);border-left:4px solid var(--green2)}.action-card p{line-height:1.55}.suggestion{font-size:11px;background:#f6ecd3;padding:9px;border-radius:10px;margin:12px 0}.god-challenge{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:18px}.god-challenge small{display:block;color:var(--muted);font-size:11px;margin:4px 0}.god-challenge .progress{height:5px}.god-challenge .progress i{background:#46a3c4}
+.god-section-title{display:flex;align-items:end;justify-content:space-between;margin:22px 3px 10px}.god-section-title h3{margin:0}.god-section-title span{font-size:11px;color:var(--muted)}.god-quick{display:grid;grid-template-columns:repeat(5,1fr);gap:13px}.god-quick button{border:1px solid var(--line);background:var(--card);border-radius:18px;padding:14px;text-align:left;display:grid;grid-template-columns:40px 1fr 15px;align-items:center;gap:8px;box-shadow:0 10px 25px rgba(20,60,30,.05);transition:.2s}.god-quick button:hover{transform:translateY(-3px);box-shadow:var(--shadow);border-color:#bdd5bf}.god-quick span{font-size:24px}.god-quick b{font-size:12px}.god-quick small{grid-column:2;color:var(--muted);font-size:10px;margin-top:-7px}.god-quick i{grid-column:3;grid-row:1/3;font-style:normal;font-size:22px;color:var(--muted)}
+.god-lower{display:grid;grid-template-columns:1fr 1fr;gap:17px;margin-top:17px}.lower-balance{display:grid;grid-template-columns:.75fr 1.25fr;align-items:center}.balance-list{display:grid;gap:9px}.balance-list>div{display:flex;justify-content:space-between;padding:10px;border-bottom:1px solid var(--line);font-size:13px}.balance-list p{font-size:10px;color:var(--muted);background:var(--soft);padding:9px;border-radius:9px}.focus-card{margin-top:14px;padding:13px;border:1px solid #d5e5d0;border-radius:15px;background:linear-gradient(90deg,#f2f7df,#edf7f5)}.focus-card h3{margin:0;font-size:15px}.focus-card p{font-size:12px;margin:7px 0 0}.timeline-card{margin-top:17px}
+@media(max-width:1300px){.god-metrics{grid-template-columns:repeat(3,1fr)}.god-main-grid{grid-template-columns:1fr 1fr}.right-stack{grid-column:1/-1;grid-template-columns:1fr 1fr;grid-template-rows:none}.god-hero{grid-template-columns:1fr 1.2fr 100px}.bot-orb{font-size:70px}.god-quick{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:900px){.god-hero,.god-main-grid,.god-lower{grid-template-columns:1fr}.god-focus{flex-wrap:wrap}.bot-orb{display:none}.right-stack{grid-column:auto;grid-template-columns:1fr}.god-metrics{grid-template-columns:repeat(2,1fr)}.god-quick{grid-template-columns:repeat(2,1fr)}.main{padding:18px}.god-score-layout{flex-direction:column}.god-hero{padding:20px}}
+@media(max-width:520px){.god-metrics,.god-quick{grid-template-columns:1fr}.focus-pill{min-width:100%;border-right:0;border-bottom:1px solid #dde6da}.god-focus{display:grid}.lower-balance{grid-template-columns:1fr}}
+
+
+/* ULTRA LIGHT/DARK THEME ENGINE */
+body{transition:background .3s,color .3s}
+body.dark{--bg:#07110f;--card:#0d1d1a;--text:#edf8f0;--muted:#9aada4;--line:#203a32;--green:#8bd46e;--green2:#52b56f;--soft:#142a23;--shadow:0 18px 45px rgba(0,0,0,.30);background:radial-gradient(circle at 70% 0%,#12372c 0,transparent 35%),#07110f;color:var(--text)}
+body.dark .side{background:linear-gradient(180deg,#071b15,#06130f);border-right:1px solid #183126}
+body.dark .card,body.dark .god-metric,body.dark .god-quick button{background:#0d1d1a;border-color:#203a32;box-shadow:0 16px 40px rgba(0,0,0,.22)}
+body.dark .god-hero{background:radial-gradient(circle at 78% 30%,rgba(121,208,104,.17),transparent 27%),linear-gradient(110deg,#0c2b22,#10251e 62%,#172d21);border-color:#214236}
+body.dark .god-focus{background:rgba(8,25,20,.65);border-color:#294539}.focus-pill{border-color:#294539}
+body.dark .action-card{background:linear-gradient(125deg,#0e211b,#1a2f20)}body.dark .suggestion{background:#1c2b25;color:#d6e4d9}
+body.dark .focus-card{background:linear-gradient(90deg,#132b22,#142c2d);border-color:#264a3a}
+body.dark .score-link{background:linear-gradient(90deg,#163425,#10251d);color:#a7e88e}
+body.dark .side-score{background:linear-gradient(135deg,#10281d,#0a1b15);border-color:#244434}
+body.dark .nav button{color:#b7c9c0}body.dark .nav button.active,body.dark .nav button:hover{background:#173326;color:#fff}
+body.dark .god-metric small,body.dark .metric-foot,body.dark .god-copy p,body.dark .muted{color:#9fb3aa}
+body.dark .progress,body.dark .track{background:#20352e}body.dark .meal{border-color:#203a32}
+.theme-toggle{position:relative;width:76px;height:40px;border:1px solid var(--line);border-radius:22px;background:var(--card);padding:3px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;overflow:hidden}
+.theme-thumb{position:absolute;width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#fff7cc,#f6c84a);left:4px;transition:.28s;box-shadow:0 4px 12px rgba(0,0,0,.18)}
+.theme-toggle span:not(.theme-thumb){z-index:1;font-size:14px;width:32px;text-align:center}body.dark .theme-thumb{transform:translateX(36px);background:linear-gradient(135deg,#34465a,#0b1118)}
+.theme-settings{position:fixed;right:26px;top:76px;width:300px;background:var(--card);border:1px solid var(--line);border-radius:20px;box-shadow:0 25px 70px rgba(0,0,0,.25);padding:18px;z-index:100;display:none}.theme-settings.show{display:block}
+.theme-settings h3{margin:0 0 5px}.theme-settings p{margin:0 0 14px;font-size:11px;color:var(--muted)}
+.theme-options{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.theme-option{border:1px solid var(--line);border-radius:12px;padding:12px 7px;background:transparent;color:var(--text);cursor:pointer;font-size:11px;font-weight:800}.theme-option.selected{border-color:var(--green2);box-shadow:inset 0 0 0 1px var(--green2);background:var(--soft)}
+.accent-row{display:flex;gap:10px;margin-top:16px}.accent{width:22px;height:22px;border-radius:50%;border:2px solid rgba(255,255,255,.7);cursor:pointer}.accent.active{outline:2px solid var(--text);outline-offset:2px}
+
+
+.theme-settings,.theme-settings *{pointer-events:auto!important}.theme-option,.accent{position:relative;z-index:102!important;touch-action:manipulation}.theme-settings{isolation:isolate!important}.theme-option:active,.accent:active{transform:scale(.97)}
+
+/* Appearance interaction hardening */
+#appearanceBtn{position:relative;z-index:120;cursor:pointer}
+.theme-settings{z-index:1000!important;pointer-events:auto!important}
+.theme-settings.show{pointer-events:auto!important}
+.theme-settings button{pointer-events:auto!important;cursor:pointer}
+
+
+/* ===== EXPANDED HEALTHY FOOD LIBRARY ===== */
+.food-library{margin-top:22px;background:var(--card);border:1px solid var(--line);border-radius:24px;padding:22px;box-shadow:var(--shadow)}
+.food-library-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:18px}.food-library h2{margin:0;font-size:22px}.food-library p{margin:5px 0 0;color:var(--muted)}
+.food-search{width:min(330px,100%);padding:12px 15px;border-radius:14px;border:1px solid var(--line);background:var(--soft);color:var(--text);outline:none}
+.food-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}.food-tab{border:1px solid var(--line);background:transparent;color:var(--text);padding:9px 13px;border-radius:999px;cursor:pointer;font-weight:800;font-size:12px}
+.food-tab.active,.food-tab:hover{background:var(--green2);border-color:var(--green2);color:white}.food-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));gap:12px}
+.food-item{border:1px solid var(--line);background:var(--soft);border-radius:17px;padding:14px;transition:.2s}.food-item:hover{transform:translateY(-3px);box-shadow:var(--shadow);border-color:var(--green2)}
+.food-item-top{display:flex;justify-content:space-between;gap:8px;align-items:center}.food-emoji{font-size:25px}.food-tag{font-size:9px;font-weight:900;padding:5px 8px;border-radius:999px;background:rgba(47,143,85,.14);color:var(--green2)}
+.food-name{font-weight:900;margin:10px 0 5px}.food-meta{font-size:11px;color:var(--muted);display:flex;justify-content:space-between}.add-food-btn{width:100%;margin-top:12px;border:0;border-radius:11px;padding:9px;background:var(--green2);color:white;font-weight:900;cursor:pointer}.food-count{font-size:11px;font-weight:900;color:var(--green2);padding:8px 11px;border-radius:999px;background:var(--soft)}
+
+
+/* ===== FOOD PREFERENCE ULTRA ===== */
+.food-preference{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0 12px}
+.pref-btn{flex:1;min-width:150px;border:1px solid var(--line);background:var(--soft);color:var(--text);padding:14px 16px;border-radius:16px;cursor:pointer;text-align:left;font-weight:900;transition:.2s}
+.pref-btn span{display:block;font-size:11px;color:var(--muted);font-weight:600;margin-top:4px}
+.pref-btn.active{background:linear-gradient(135deg,var(--green2),var(--green));color:#fff;border-color:transparent;transform:translateY(-2px);box-shadow:var(--shadow)}
+.pref-btn.active span{color:rgba(255,255,255,.82)}
+.food-library{margin-top:22px;background:var(--card);border:1px solid var(--line);border-radius:24px;padding:22px;box-shadow:var(--shadow)}
+.food-library-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:18px}.food-library h2{margin:0;font-size:22px}.food-library p{margin:5px 0 0;color:var(--muted)}
+.food-search{width:min(360px,100%);padding:13px 15px;border-radius:14px;border:1px solid var(--line);background:var(--soft);color:var(--text);outline:none}
+.food-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}.food-tab{border:1px solid var(--line);background:transparent;color:var(--text);padding:9px 13px;border-radius:999px;cursor:pointer;font-weight:800;font-size:12px}
+.food-tab.active,.food-tab:hover{background:var(--green2);border-color:var(--green2);color:#fff}
+.food-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:13px}
+.food-item{border:1px solid var(--line);background:var(--soft);border-radius:18px;padding:15px;transition:.22s}
+.food-item:hover{transform:translateY(-4px);box-shadow:var(--shadow);border-color:var(--green2)}
+.food-item-top{display:flex;justify-content:space-between;gap:8px;align-items:center}.food-emoji{font-size:26px}.food-tag{font-size:9px;font-weight:900;padding:5px 8px;border-radius:999px;background:rgba(47,143,85,.14);color:var(--green2)}
+.food-name{font-weight:900;margin:11px 0 6px}.food-meta{font-size:11px;color:var(--muted);display:flex;justify-content:space-between}
+.food-type{font-size:10px;font-weight:900;margin-top:9px;opacity:.75}
+.add-food-btn{width:100%;margin-top:12px;border:0;border-radius:11px;padding:10px;background:var(--green2);color:#fff;font-weight:900;cursor:pointer}
+.food-count{font-size:11px;font-weight:900;color:var(--green2);padding:8px 11px;border-radius:999px;background:var(--soft)}
+@media(max-width:700px){.food-library-head{flex-direction:column}.food-search{width:100%}.pref-btn{min-width:100%}}
+
+
+/* ===== CRITICAL FOOD LIBRARY LAYOUT FIX ===== */
+*{box-sizing:border-box}
+html,body{max-width:100%;overflow-x:hidden}
+.main,.content,main,.page-content{min-width:0;max-width:100%}
+.food-library{
+  width:100%!important;
+  max-width:100%!important;
+  min-width:0!important;
+  margin-left:0!important;
+  margin-right:0!important;
+  overflow:hidden!important;
+}
+.food-library-head{width:100%;min-width:0}
+.food-library-head>div{min-width:0}
+.food-preference{
+  width:100%!important;
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:10px!important;
+}
+.pref-btn{
+  width:100%!important;
+  min-width:0!important;
+  overflow:hidden!important;
+  white-space:normal!important;
+}
+.food-tabs{
+  max-width:100%!important;
+  overflow-x:auto!important;
+  overflow-y:hidden!important;
+  flex-wrap:nowrap!important;
+  padding-bottom:4px!important;
+  scrollbar-width:thin;
+}
+.food-tab{flex:0 0 auto}
+.food-grid{
+  width:100%!important;
+  max-width:100%!important;
+  min-width:0!important;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr))!important;
+}
+.food-item{min-width:0!important;overflow:hidden}
+.food-name,.food-meta,.food-type{overflow-wrap:anywhere}
+
+@media (max-width:1250px){
+  .food-preference{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .food-grid{grid-template-columns:repeat(auto-fit,minmax(170px,1fr))!important}
+}
+@media (max-width:900px){
+  .food-library{padding:16px!important}
+  .food-preference{grid-template-columns:1fr 1fr!important}
+  .food-grid{grid-template-columns:repeat(auto-fit,minmax(155px,1fr))!important}
+}
+@media (max-width:560px){
+  .food-preference{grid-template-columns:1fr!important}
+  .food-grid{grid-template-columns:1fr!important}
+}
+
+
+/* ===== REAL FOOD LIBRARY POSITION FIX =====
+   The Food Library is a direct body-level section, while the sidebar is fixed.
+   Reserve sidebar space explicitly so no part can render underneath it. */
+body > .food-library#healthyFoodLibrary{
+  margin-left:255px!important;
+  width:calc(100% - 255px)!important;
+  max-width:none!important;
+  min-width:0!important;
+  padding:22px!important;
+  transform:none!important;
+  position:relative!important;
+  left:auto!important;
+  right:auto!important;
+}
+body > .food-library#healthyFoodLibrary .food-library-head,
+body > .food-library#healthyFoodLibrary .food-preference,
+body > .food-library#healthyFoodLibrary .food-tabs,
+body > .food-library#healthyFoodLibrary .food-grid{
+  width:100%!important;
+  max-width:100%!important;
+  min-width:0!important;
+  margin-left:0!important;
+}
+@media(max-width:950px){
+  body > .food-library#healthyFoodLibrary{
+    margin-left:72px!important;
+    width:calc(100% - 72px)!important;
+  }
+}
+@media(max-width:600px){
+  body > .food-library#healthyFoodLibrary{
+    margin-left:0!important;
+    width:100%!important;
+    padding:16px 13px 78px!important;
+  }
+}
+
+</style></head>
+<body>
+<section id="landing">
+<nav class="land-nav"><div class="logo"><div class="logo-mark">🌿</div>NutriSense</div><div><span class="pill">🏆 Competition Prototype 2026</span></div></nav>
+<div class="land-hero"><div class="land-copy"><span class="pill">✨ Nutrition, finally made understandable</span><h1>Your food tells a story.<br><em>We help you read it.</em></h1><p>NutriSense goes beyond calorie counting. Track what you eat, understand your nutritional balance, and get clear, personalized next steps for a healthier lifestyle.</p><div class="cta-row"><button class="cta" onclick="startApp()">Explore Live Demo →</button><button class="cta alt" onclick="document.getElementById('how').scrollIntoView()">How it works ↓</button></div><div class="trust"><span>✓ <b>NutriScore+</b> daily balance</span><span>✓ <b>Indian food</b> support</span><span>✓ <b>Smart insights</b></span></div></div>
+<div class="phone"><div class="phone-screen"><div class="mini-head"><b>🌿 NutriSense</b><span>🔔</span></div><div class="mini-welcome"><small>Tuesday, August 26</small><h3>Hello, Friend 👋</h3><p>Let's make today healthier.</p></div><div class="mini-score"><div class="scoreline"><div><small>YOUR NUTRISCORE+</small><h2 style="margin:5px 0">78 / 100</h2><small>Great progress today ✨</small></div><div class="scorebubble">78</div></div></div><div class="mini-stats"><div class="mini-stat"><small>🔥 Calories</small><b>1,420</b><div class="mini-progress"><i style="width:71%"></i></div></div><div class="mini-stat"><small>💪 Protein</small><b>68g</b><div class="mini-progress"><i style="width:68%"></i></div></div></div></div></div></div>
+<div id="how" style="max-width:1050px;margin:60px auto 0;padding:30px;display:grid;grid-template-columns:repeat(3,1fr);gap:15px"><div class="card"><b>01 · Understand</b><h3>Your profile & goals</h3><p class="muted">Personalized targets based on your lifestyle.</p></div><div class="card"><b>02 · Track</b><h3>Food & hydration</h3><p class="muted">Log everyday Indian and global foods.</p></div><div class="card"><b>03 · Improve</b><h3>Insights & action</h3><p class="muted">Know what to do next, not just what you ate.</p></div></div>
+</section>
+
+<div id="app" class="app hidden">
+<aside class="side"><div class="logo"><div class="logo-mark">🌿</div>NutriSense</div><div class="side-sub">EAT SMART · LIVE STRONGER</div><div class="nav">
+<button class="active" data-page="dashboard">⌂ Dashboard</button><button data-page="food">🍱 Food Log</button><button data-page="scan">📸 AI Food Scan</button><button data-page="planner">🗓 Meal Planner</button><button data-page="coach">✦ Smart Coach</button><button data-page="analytics">▥ Analytics</button><button data-page="brief">✨ AI Brief</button><button data-page="lab">🧪 Health Lab</button><button data-page="command">⚡ Command Center</button><button data-page="impact">🚀 Impact Simulator</button><button data-page="water">💧 Hydration</button><button data-page="achievements">🏆 Achievements</button><button data-page="guide">📚 Nutrition Guide</button><button data-page="grocery">🛒 Grocery List</button><button data-page="profile">⚙ Profile</button>
+</div><div class="side-score"><small>NUTRISCORE+</small><br><strong id="sideScore">78 / 100</strong><br><small id="sideMsg">Keep building healthy habits ✨</small></div></aside>
+<main class="main"><header class="top"><div><div class="eyebrow" id="dateText"></div><h1 id="pageTitle">Hello, Friend 👋</h1></div><div class="top-actions"><button class="theme-toggle" onclick="toggleTheme()" title="Switch light/dark theme"><span class="theme-thumb"></span><span>☀️</span><span>🌙</span></button><button type="button" id="appearanceBtn" data-theme-settings title="Appearance settings" aria-label="Appearance settings">🎨</button><button class="icon" id="theme">☾</button><button class="icon">🔔</button><div class="avatar">F</div></div></header>
+
+<section class="page active" id="dashboard">
+<div class="god-hero">
+  <div class="god-copy">
+    <div class="god-kicker"><span class="live-orb"></span> NUTRISENSE X INTELLIGENCE</div>
+    <h2 id="godGreeting">You're doing amazing! 🎉</h2>
+    <p>Your nutrition balance is improving consistently. Keep focusing on protein, hydration and small wins that compound every day.</p>
+  </div>
+  <div class="god-focus">
+    <div class="focus-pill">🎯 <span><b>Today's Focus</b><small>High Protein Meals</small></span></div>
+    <div class="focus-pill">💧 <span><b>Hydration Goal</b><small><span id="heroWater">1500</span> / 2500 ml</small></span></div>
+    <div class="focus-pill">🔥 <span><b>Calorie Budget</b><small><span id="heroCalories">1420</span> / <span id="heroGoal">2100</span> kcal</small></span></div>
+  </div>
+  <div class="bot-orb">🤖</div>
+</div>
+
+<div class="god-metrics">
+  <div class="god-metric"><div class="metric-head">🔥 <span>Calories</span></div><b><span id="cal">1420</span> <small>/ <span id="goalCal">2100</span> kcal</small></b><div class="progress"><i id="calBar"></i></div><div class="metric-foot"><strong id="calPercent">68%</strong><span>Keep balanced</span></div></div>
+  <div class="god-metric"><div class="metric-head">💪 <span>Protein</span></div><b><span id="protein">68</span> <small>/ 100 g</small></b><div class="progress"><i id="proteinBar"></i></div><div class="metric-foot"><strong>68%</strong><span>32 g left</span></div></div>
+  <div class="god-metric orange"><div class="metric-head">🌾 <span>Carbs</span></div><b>150 <small>/ 250 g</small></b><div class="progress"><i style="width:60%"></i></div><div class="metric-foot"><strong>60%</strong><span>100 g left</span></div></div>
+  <div class="god-metric purple"><div class="metric-head">🥑 <span>Healthy fats</span></div><b>38 <small>/ 60 g</small></b><div class="progress"><i style="width:63%"></i></div><div class="metric-foot"><strong>63%</strong><span>22 g left</span></div></div>
+  <div class="god-metric blue"><div class="metric-head">💧 <span>Water</span></div><b><span id="waterStat">1500</span> <small>/ 2500 ml</small></b><div class="progress"><i id="waterBar"></i></div><div class="metric-foot"><strong id="waterPercent">60%</strong><span>1000 ml left</span></div></div>
+</div>
+
+<div class="god-main-grid">
+  <div class="card food-story-card">
+    <div class="section-title"><div><h3>Today's Food Story</h3><small class="muted">Your meals, beautifully organized</small></div><button class="soft-btn" onclick="showPage('food')">Manage</button></div>
+    <div id="mealList"></div>
+    <button class="meal-cta" onclick="showPage('food')">＋ Log Your Meal</button>
+  </div>
+  <div class="card god-score">
+    <div class="section-title"><h3>NutriScore+ <small class="muted">ⓘ</small></h3><span class="tag">LIVE</span></div>
+    <div class="god-score-layout">
+      <div class="big-ring ring" id="scoreRing"><strong id="score">78</strong><span>/ 100</span></div>
+      <div class="score-breakdown">
+        <div><span>Calories</span><b id="bCal">18 / 20</b><div class="track"><i style="width:90%"></i></div></div>
+        <div><span>Protein</span><b id="bProtein">17 / 20</b><div class="track"><i style="width:85%"></i></div></div>
+        <div><span>Hydration</span><b id="bWater">14 / 20</b><div class="track"><i id="bWaterBar" style="width:70%"></i></div></div>
+        <div><span>Fiber</span><b id="bFiber">18 / 20</b><div class="track"><i id="bFiberBar" style="width:90%"></i></div></div>
+      </div>
+    </div>
+    <div class="score-status">🏆 <b id="scoreLabel">Excellent</b><span id="scoreDelta">+12 pts vs yesterday</span></div>
+    <button class="score-link" onclick="showPage('analytics')">View Score Breakdown →</button>
+  </div>
+  <div class="right-stack">
+    <div class="card action-card">
+      <div class="section-title"><h3>🧠 Your Next Best Action</h3><span class="tag">SMART</span></div>
+      <p id="insightText">You are at 68g protein today. Add 20–25g more protein in your next meal.</p>
+      <div class="suggestion">🟡 Try: Paneer, Eggs, Dal, Greek Yogurt</div>
+      <button class="primary" onclick="showPage('coach')">See Why This Matters →</button>
+    </div>
+    <div class="card challenge god-challenge">
+      <div class="challenge-icon">💧</div><div><b>Daily Challenge</b><small>Drink 2 glasses of water before dinner</small><div class="progress"><i id="challengeBar" style="width:60%"></i></div><small>1 / 2 completed</small></div><b id="challengeText">60%</b>
+    </div>
+  </div>
+</div>
+
+<div class="god-section-title"><h3>⚡ Quick Actions</h3><span>Everything you need, one tap away</span></div>
+<div class="god-quick">
+  <button onclick="showPage('food')"><span>🍱</span><b>Log Food</b><small>Track your meal</small><i>›</i></button>
+  <button onclick="showPage('scan')"><span>📸</span><b>AI Food Scan</b><small>Analyze food</small><i>›</i></button>
+  <button onclick="showPage('water')"><span>💧</span><b>Add Water</b><small>Track hydration</small><i>›</i></button>
+  <button onclick="showPage('planner')"><span>🥣</span><b>Meal Planner</b><small>Plan your meals</small><i>›</i></button>
+  <button onclick="showPage('coach')"><span>🤖</span><b>Smart Coach</b><small>Get insights</small><i>›</i></button>
+</div>
+
+<div class="god-lower">
+  <div class="card"><div class="section-title"><h3>Nutrition Balance</h3><span class="pro-chip">LIVE MAP</span></div><div class="lower-balance"><div class="macro-donut"><div><b>Macros</b><small class="muted">today</small></div></div><div class="balance-list"><div>🟢 Protein <b id="macroProtein">23%</b></div><div>🟠 Carbs <b id="macroCarbs">60%</b></div><div>🟣 Healthy fats <b id="macroFat">17%</b></div><p>Balanced visuals generated from today's logged data.</p></div></div></div>
+  <div class="card"><div class="section-title"><h3>Habit Consistency</h3><span class="tag">7 DAYS</span></div><div class="heatmap" id="heatmap"></div><div class="focus-card"><h3>🎯 Tomorrow's focus</h3><p class="muted">Log breakfast before 10 AM to protect your strongest habit.</p></div></div>
+</div>
+<div class="card timeline-card"><div class="section-title"><div><h3>Personal Insight Timeline</h3><small class="muted">A story built from today's behavior</small></div><button class="soft-btn" onclick="toast('Insight history refreshed')">Refresh</button></div><div class="timeline" id="timeline"></div></div>
+</section>
+
+<section class="page" id="food"><div class="grid split"><div class="card"><div class="section-title"><div><h2>Food Logger 🍱</h2><small class="muted">Indian food first. Global foods too.</small></div></div><input id="foodSearch" class="search" placeholder="Search roti, dal, paneer, chicken..." oninput="renderFoods()"><div class="food-grid" id="foodGrid"></div></div><div class="card"><div class="section-title"><h3>Today's diary</h3><button class="soft-btn" onclick="clearFoods()">Clear</button></div><div id="diary"></div></div></div></section>
+
+<section class="page" id="scan"><div class="grid split"><div class="card"><div class="section-title"><div><h2>AI Food Scan 📸</h2><p class="muted">Upload a food image to demonstrate instant nutrition analysis.</p></div></div><div class="scan"><div style="font-size:50px">📷</div><h3>Scan your plate</h3><p class="muted">Image analysis prototype with demo nutrition recognition.</p><input type="file" id="photo" accept="image/*" onchange="analyzeImage()"><label for="photo">Choose Food Image</label><div class="scan-result hidden" id="scanResult"><div class="card"><b id="scanFood">🥗 Mixed Healthy Meal</b><p class="muted" id="scanDesc">Estimated from visual food categories.</p><div class="metric"><div class="card"><small>Calories</small><b id="scanCal">420</b></div><div class="card"><small>Protein</small><b id="scanProtein">19g</b></div><div class="card"><small>Confidence</small><b>87%</b></div></div><button class="primary" onclick="addScanned()">Add to Food Diary</button></div></div></div></div>
+<div class="card insight"><h3>🔍 How it works</h3><p>1. Capture or upload a meal.</p><p>2. The prototype identifies a likely meal category.</p><p>3. NutriSense estimates nutrition from its food knowledge base.</p><p class="muted"><b>Prototype note:</b> This demo uses simulated recognition logic for a reliable offline competition demonstration.</p></div></div></section>
+
+<section class="page" id="planner"><div class="section-title"><div><h2>Smart Meal Planner 🥗</h2><p class="muted">Practical meal ideas built around balanced nutrition.</p></div><button class="primary" onclick="newPlan()">↻ Generate New Plan</button></div><div class="planner" id="plannerGrid"></div><div class="card insight" style="margin-top:17px"><b>Why this is smarter than a random diet?</b><p class="muted">Plans are balanced around energy, protein and food variety while keeping meals familiar and practical.</p></div></section>
+
+<section class="page" id="coach"><div class="section-title"><div><h2>Smart Coach ✦</h2><p class="muted">NutriSense looks at your current data and tells you what matters next.</p></div></div><div class="coach-grid" id="coachGrid"></div></section>
+
+<section class="page" id="analytics"><div class="grid analytics-top"><div class="card"><div class="section-title"><h3>Nutrition consistency</h3><span class="tag">7 DAYS</span></div><div class="bars" id="bars"></div></div><div class="card"><h3>Your week in numbers</h3><div class="metric"><div class="card"><small class="muted">Avg Score</small><b>81</b></div><div class="card"><small class="muted">Best Streak</small><b>4🔥</b></div><div class="card"><small class="muted">Goals Hit</small><b>5/7</b></div></div><div class="card insight" style="margin-top:15px"><b>📈 Pattern detected</b><p class="muted">Your nutrition consistency rises when you log breakfast. That's your strongest habit anchor.</p></div></div></div></section>
+
+<section class="page" id="water"><div class="grid hero-grid"><div class="card"><div class="section-title"><div><h2>Hydration 💧</h2><p class="muted">Small sips. Better consistency.</p></div></div><div class="water-wrap"><div class="ring" id="waterRing"><strong id="waterBig">1.5L</strong><span>of 2.5L</span></div></div><div class="water-actions"><button onclick="addWater(250)">+250 ml</button><button onclick="addWater(500)">+500 ml</button><button onclick="addWater(750)">+750 ml</button></div></div><div class="card insight"><h3>💦 Hydration Coach</h3><p id="waterTip">You're one litre away from your goal. A glass now is an easy win.</p><div class="card" style="margin-top:15px"><b>Today's challenge</b><p class="muted">Reach 2.0L before 7 PM to unlock the Hydration Hero badge.</p></div></div></div></section>
+
+<section class="page" id="achievements"><div class="section-title"><div><h2>Achievements 🏆</h2><p class="muted">Progress deserves to be visible.</p></div></div><div class="achievement-grid" id="achievementsGrid"></div></section>
+<section class="page" id="guide"><div class="section-title"><div><h2>Nutrition Guide 📚</h2><p class="muted">Understand the “why”, not just the numbers.</p></div></div><div class="guide-grid" id="guideGrid"></div></section>
+<section class="page" id="grocery"><div class="section-title"><div><h2>Smart Grocery List 🛒</h2><p class="muted">Healthy ingredients organized for your week.</p></div><button class="primary" onclick="addGrocery()">+ Add Item</button></div><div class="grocery-grid" id="groceryGrid"></div></section>
+
+<section class="page" id="brief"><div class="section-title"><div><h2>NutriSense X Brief ✨</h2><p class="muted">A presentation-ready summary of what your data is saying today.</p></div><span class="pro-chip">GENERATED NOW</span></div><div class="grid split"><div class="card focus-card"><h3>🌟 Today's story</h3><p id="briefStory" class="muted"></p><button class="primary" onclick="generateBrief()">Generate fresh brief ↻</button></div><div class="card"><h3>Priority stack</h3><div class="insight-feed" id="priorityStack"></div></div></div><div class="grid split" style="margin-top:17px"><div class="card"><h3>Why NutriSense X is different</h3><div id="impactList" class="insight-feed"></div></div><div class="card"><h3>Judge demo talking point 🎤</h3><p class="muted">NutriSense doesn't stop at tracking. It converts fragmented meal data into a clear daily narrative and a prioritized next action.</p><div class="demo-tip">Use this page near the end of your live demo—it connects the data layer to decision-making.</div></div></div></section><section class="page" id="lab"><div class="section-title"><div><h2>Health Lab 🧪</h2><p class="muted">Explore how different choices could affect today's nutrition picture.</p></div></div><div class="grid split"><div class="card"><h3>What-if simulator</h3><p class="muted">Choose a healthy addition and preview its impact before logging it.</p><select id="whatif" class="search" onchange="simulateWhatIf()"><option value="fruit">🍎 Add a fruit snack</option><option value="protein">💪 Add a protein serving</option><option value="water">💧 Drink 500 ml water</option><option value="skip">⚠️ Skip your next meal</option></select><div class="metric" style="margin-top:17px"><div class="card"><small>Score impact</small><b id="simScore">+4</b></div><div class="card"><small>Best metric</small><b id="simMetric" style="font-size:17px">Fiber</b></div><div class="card"><small>Action</small><b id="simAction" style="font-size:17px">Try it</b></div></div><button class="primary" style="margin-top:15px" onclick="applySimulation()">Apply to today</button></div><div class="card"><h3>Scenario explanation</h3><div class="macro-donut"><div><b id="labScore">82</b><small class="muted">projected score</small></div></div><p class="muted" id="simText">Adding fruit is projected to improve fiber and overall meal variety.</p></div></div></section>
+<section class="page" id="command"><div class="section-title"><div><h2>Command Center ⚡</h2><p class="muted">A live mission-control view of your nutrition system.</p></div><span class="pro-chip">LEGENDARY MODE</span></div><div class="wow-hero"><div class="signal"><i></i> SYSTEM SYNCHRONIZED · PERSONAL NUTRITION MODEL</div><h2>Your health data is no longer a spreadsheet. It is a <span style="color:var(--neon)">decision engine.</span></h2><p id="commandNarrative">NutriSense X is continuously organizing today's meals, hydration and habits into a clear next-best-action system.</p><div class="wow-actions"><button class="primary" style="background:#fff;color:#143a22" onclick="showPage('brief')">View AI Brief ✨</button><button class="glass-btn" onclick="startDemoTour()">▶ Start Judge Demo</button></div></div><div class="neural-grid"><div class="card pulse-card"><div class="section-title"><h3>Nutrition Signal Network</h3><span class="tag">LIVE MODEL</span></div><div class="radar"><i class="radar-dot"></i><i class="radar-dot"></i><i class="radar-dot"></i><i class="radar-dot"></i></div><div class="pulse-line"></div><small class="muted">Signals represent the prototype's dynamic meal, hydration, protein and consistency dimensions.</small></div><div class="card mission"><h3>🎯 Mission priority</h3><p class="muted" id="missionPriority">Loading your highest-impact action…</p><div class="mission-step"><span class="step-num">01</span><div><b>Observe</b><br><small class="muted">Collect today's nutrition signals</small></div></div><div class="mission-step"><span class="step-num">02</span><div><b>Interpret</b><br><small class="muted">Detect the most meaningful gap</small></div></div><div class="mission-step"><span class="step-num">03</span><div><b>Act</b><br><small class="muted">Turn insight into one clear next step</small></div></div></div></div></section>
+<section class="page" id="impact"><div class="section-title"><div><h2>Impact Simulator 🚀</h2><p class="muted">Show judges how a small behavior change can reshape today's nutrition picture.</p></div></div><div class="card"><h3>Choose a transformation</h3><div class="stage" id="impactStage"><button class="active" onclick="setImpact('breakfast',this)">🍳 Log breakfast</button><button onclick="setImpact('protein',this)">💪 Improve protein</button><button onclick="setImpact('water',this)">💧 Hit hydration</button><button onclick="setImpact('combo',this)">⚡ Do all three</button></div><div class="compare" style="margin-top:18px"><div class="compare-box"><small class="muted">CURRENT STATE</small><b id="beforeScore">78</b><p id="beforeText" class="muted">Your baseline is visible, but there are gaps to improve.</p></div><div class="compare-box after"><small>PROJECTED STATE</small><b id="afterScore">86</b><p id="afterText">Consistency and balance improve when breakfast is logged.</p></div></div><div class="metric" style="margin-top:16px"><div class="card"><small>NutriScore+ shift</small><b id="impactDelta">+8</b></div><div class="card"><small>Strongest gain</small><b id="impactMetric" style="font-size:17px">Consistency</b></div><div class="card"><small>Behavior leverage</small><b id="impactLeverage" style="font-size:17px">High</b></div></div></div><div class="card insight" style="margin-top:17px"><b>🏆 Competition angle</b><p class="muted">The innovation is not just tracking what happened. NutriSense X lets the user explore what could happen before they make the next choice.</p></div></section>
+<section class="page" id="profile"><div class="grid split"><div class="card"><h2>Profile & Goals</h2><form class="profile-form" onsubmit="saveProfile(event)"><label>Name<input id="name" value="Friend"></label><label>Age<input id="age" type="number" value="21"></label><label>Height (cm)<input id="height" type="number" value="175"></label><label>Weight (kg)<input id="weight" type="number" value="70"></label><label>Activity<select id="activity"><option>Moderately Active</option><option>Lightly Active</option><option>Very Active</option></select></label><label>Goal<select id="goal"><option>Maintain Weight</option><option>Lose Weight</option><option>Gain Weight</option><option>Improve Overall Health</option></select></label><div style="grid-column:1/-1"><button class="primary" type="submit">Save & Recalculate</button></div></form></div><div class="card"><h3>Body Metrics</h3><div class="metric"><div class="card"><small class="muted">BMI</small><b id="bmi">22.9</b></div><div class="card"><small class="muted">Status</small><b id="bmiStatus" style="font-size:17px">Healthy</b></div><div class="card"><small class="muted">Daily Goal</small><b id="dailyGoal" style="font-size:17px">2100</b></div></div><div class="card insight" style="margin-top:15px"><b>Important</b><p class="muted">BMI and nutrition estimates are general wellness indicators, not medical diagnosis.</p></div><button class="soft-btn" style="margin-top:10px" onclick="resetApp()">Reset Demo Data</button></div></div></section>
+</main></div>
+
+<div id="onboard" class="modal-wrap hidden"><div class="modal"><span class="pill">WELCOME TO NUTRISENSE 🌿</span><h2>Choose your wellness focus</h2><p class="muted">This makes your demo experience feel personalized.</p><div class="onboard-options" id="focusOptions"><button class="option selected" data-focus="Maintain Weight">⚖️<br><b>Maintain</b><br><small>Balanced everyday nutrition</small></button><button class="option" data-focus="Lose Weight">🔥<br><b>Lose Weight</b><br><small>Smart calorie awareness</small></button><button class="option" data-focus="Gain Weight">💪<br><b>Gain Strength</b><br><small>More energy & protein</small></button><button class="option" data-focus="Improve Overall Health">🌿<br><b>Feel Better</b><br><small>Build healthier habits</small></button></div><button class="primary" style="margin-top:18px;width:100%" onclick="finishOnboarding()">Start My Journey →</button></div></div>
+<div id="command" class="command-palette hidden"><div class="command-box"><input id="commandSearch" placeholder="Search actions… (Esc to close)" oninput="filterCommands()"><div id="commandItems"><button class="command-item" onclick="commandGo('food')">🍱 Log food</button><button class="command-item" onclick="commandGo('scan')">📸 Scan a meal</button><button class="command-item" onclick="commandGo('water')">💧 Add water</button><button class="command-item" onclick="commandGo('brief')">✨ Open AI Brief</button><button class="command-item" onclick="commandGo('lab')">🧪 Try Health Lab</button></div></div></div><button class="fab" onclick="openCommand()">＋</button><div id="demoOverlay" class="demo-overlay hidden"><div class="demo-shell"><div class="demo-kicker" id="demoKicker">JUDGE DEMO</div><h1 id="demoTitle">WELCOME</h1><p id="demoText"></p><div class="demo-progress"><i id="demoBar"></i></div><div class="demo-controls"><small id="demoCount"></small><button id="demoNext" onclick="nextDemo()">Next →</button></div></div></div><div class="toast" id="toast"></div>
+<script>
+const key="nutrisenseGodV1";
+const base={water:1500,focus:"Maintain Weight",foods:[
+{name:"Poha + Curd",meal:"Breakfast",e:"🥣",cal:340,p:12,c:52,f:9,fi:7},
+{name:"Dal + Roti + Salad",meal:"Lunch",e:"🥘",cal:560,p:24,c:82,f:14,fi:13},
+{name:"Banana + Almonds",meal:"Snack",e:"🍌",cal:190,p:5,c:29,f:8,fi:6},
+{name:"Paneer + Vegetables",meal:"Dinner",e:"🥗",cal:330,p:27,c:12,f:17,fi:8}],grocery:{Proteins:["Paneer","Eggs","Dal"],Vegetables:["Spinach","Tomatoes","Carrots"],Fruits:["Bananas","Apples","Oranges"],Grains:["Oats","Brown rice","Whole wheat atta"],Dairy:["Curd","Milk"],"Healthy fats":["Almonds","Seeds"]}};
+let s=JSON.parse(localStorage.getItem(key))||structuredClone(base);
+const foods=[["Roti","🫓",120,4,23,1,3],["Rice","🍚",205,4,45,0,1],["Dal","🥘",180,10,30,2,8],["Rajma","🫘",225,15,40,1,12],["Chole","🫘",240,12,38,5,10],["Paneer","🧀",265,18,6,20,0],["Curd","🥣",100,5,7,5,0],["Poha","🍚",250,6,44,6,4],["Upma","🍲",230,6,38,7,4],["Idli","🍘",130,4,28,1,2],["Dosa","🥞",168,4,30,4,2],["Paratha","🫓",280,7,38,11,4],["Chicken","🍗",240,38,0,10,0],["Egg","🥚",78,6,1,5,0],["Banana","🍌",105,1,27,0,3],["Apple","🍎",95,0,25,0,4],["Oats","🥣",150,5,27,3,4],["Almonds","🌰",164,6,6,14,4],["Salad","🥗",80,3,12,2,5]];
+const plans=[[["Breakfast","Poha + Curd","380 kcal","Balanced carbs"],["Lunch","Rajma Rice + Salad","620 kcal","High fiber"],["Snack","Apple + Almonds","190 kcal","Healthy fats"],["Dinner","Paneer Roti + Veggies","520 kcal","Protein rich"]],[["Breakfast","Oats + Banana","350 kcal","High fiber"],["Lunch","Dal + Roti + Salad","560 kcal","Balanced"],["Snack","Curd + Fruit","180 kcal","Gut friendly"],["Dinner","Chicken + Rice + Veggies","580 kcal","High protein"]],[["Breakfast","Besan Chilla + Curd","390 kcal","Protein rich"],["Lunch","Paneer + Roti","570 kcal","Vegetarian"],["Snack","Banana + Peanuts","210 kcal","Energy"],["Dinner","Dal Khichdi + Salad","450 kcal","Light dinner"]]];
+const guides=[["💪","Protein & Recovery","Protein supports muscle maintenance and can help meals feel more satisfying."],["💧","Hydration Matters","Water supports temperature regulation and normal body functions."],["🔥","Calories Explained","Calories are energy. The bigger picture is balance, quality and consistency."],["🌾","Fiber Power","Legumes, fruits, vegetables and whole grains support a fiber-rich diet."],["🥑","Healthy Fats","Nuts and seeds can provide unsaturated fats as part of a balanced diet."],["🍬","Hidden Sugar","Be mindful of sugary drinks and highly processed foods."],["🏷️","Read Food Labels","Serving size and ingredient order can help you make informed choices."],["🍽️","Portion Awareness","Healthy eating can include familiar foods in appropriate portions."]];
+const ach=[["🌱","First Healthy Day",true],["🔥","3-Day Streak",true],["💧","Hydration Hero",false],["💪","Protein Pro",true],["🥗","Nutrition Champion",false],["🏅","7-Day Streak",false]];
+function save(){localStorage.setItem(key,JSON.stringify(s))}
+function totals(){return s.foods.reduce((a,x)=>({cal:a.cal+x.cal,p:a.p+x.p,c:a.c+x.c,f:a.f+x.f,fi:a.fi+x.fi}),{cal:0,p:0,c:0,f:0,fi:0})}
+function goal(){return s.focus==="Lose Weight"?1800:s.focus==="Gain Weight"?2400:2100}
+function calcScore(){let t=totals(),g=goal();let calorie=Math.max(0,Math.min(100,100-Math.abs(t.cal-g)/Math.max(g,1)*100));let protein=Math.min(100,t.p/100*100);let hydration=Math.min(100,s.water/2500*100);let fiber=Math.min(100,t.fi/35*100);return Math.max(0,Math.min(100,Math.round(calorie*.35+protein*.30+hydration*.20+fiber*.15)));}
+function update(){let t=totals(),g=goal(),n=calcScore();set("cal",t.cal);set("goalCal",g);set("protein",t.p);set("fiber",t.fi);set("waterStat",s.water);set("score",n);set("sideScore",n+" / 100");set("sideMsg",n>=85?"Excellent balance today ✨":n>=70?"Keep building healthy habits ✨":n>=50?"A few smart actions can lift your score 🎯":"Let’s rebuild today, one step at a time 💚");bar("calBar",t.cal/g*100);bar("proteinBar",t.p);bar("fiberBar",t.fi/35*100);bar("waterBar",s.water/2500*100);document.getElementById("scoreRing").style.setProperty("--p",n);set("bCal",Math.round(Math.max(0,24-Math.abs(t.cal-g)/g*38)));set("bProtein",Math.round(Math.min(16,t.p/100*16)));set("bWater",Math.round(Math.min(10,s.water/2500*10)));set("bFiber",Math.round(Math.min(10,t.fi/35*10)));bar("bWaterBar",s.water/2500*100);bar("bFiberBar",t.fi/35*100);
+set("heroWater",s.water);set("heroCalories",t.cal);set("heroGoal",g);
+set("calPercent",Math.round(Math.min(100,t.cal/g*100))+"%");
+set("waterPercent",Math.round(Math.min(100,s.water/2500*100))+"%");
+set("scoreLabel",n>=85?"Excellent":n>=70?"Great progress":n>=50?"Building momentum":"Fresh start");
+set("scoreDelta",n>=85?"+12 pts vs yesterday":n>=70?"+8 pts vs yesterday":"One smart action can lift your score");
+renderMeals();renderDiary();renderCoach();renderWater();save()}
+function set(id,v){let el=document.getElementById(id);if(el)el.textContent=v}
+function bar(id,p){let el=document.getElementById(id);if(el)el.style.width=Math.min(100,Math.max(0,p))+"%"}
+function renderMeals(){document.getElementById("mealList").innerHTML=s.foods.map((x,i)=>`<div class="meal"><div class="food-ico">${x.e}</div><div><b>${x.name}</b><br><small class="muted">${x.meal} · ${x.p}g protein</small></div><div class="right"><b>${x.cal} kcal</b><br><button class="soft-btn" onclick="removeFood(${i})">Remove</button></div></div>`).join("")||`<p class="muted">Your story starts with your first meal.</p>`}
+function renderDiary(){document.getElementById("diary").innerHTML=s.foods.map((x,i)=>`<div class="meal"><div class="food-ico">${x.e}</div><div><b>${x.name}</b><br><small class="muted">${x.meal} · ${x.cal} kcal · P${x.p}</small></div><button class="soft-btn" onclick="removeFood(${i})">×</button></div>`).join("")||`<p class="muted">No food logged yet.</p>`}
+function renderFoods(){let q=(document.getElementById("foodSearch").value||"").toLowerCase();document.getElementById("foodGrid").innerHTML=foods.filter(x=>x[0].toLowerCase().includes(q)).map((x,i)=>`<div class="food"><div><b>${x[1]} ${x[0]}</b><br><small>${x[2]} kcal · ${x[3]}g protein</small></div><button class="soft-btn" onclick="addFood(${i})">+ Add</button></div>`).join("")}
+function addFood(i){let x=foods[i],meal=prompt("Meal: Breakfast, Lunch, Snack or Dinner?","Snack")||"Snack";s.foods.push({name:x[0],e:x[1],cal:x[2],p:x[3],c:x[4],f:x[5],fi:x[6],meal:meal});update();toast("🌿 "+x[0]+" added")}
+function removeFood(i){s.foods.splice(i,1);update();toast("Meal removed")}
+function clearFoods(){if(confirm("Clear today's food diary?")){s.foods=[];update()}}
+function renderCoach(){let t=totals(),arr=[];if(t.p<80)arr.push(["💪","Boost your protein",`You are at ${t.p}g today. Consider dal, paneer, eggs or curd in your next meal.`]);if(t.fi<28)arr.push(["🥦","Fiber needs attention",`You have about ${t.fi}g logged. Add fruit, vegetables or legumes.`]);if(s.water<2000)arr.push(["💧","Hydration checkpoint",`You're ${2500-s.water} ml away from today's hydration goal.`]);arr.push(["🌟","Keep your momentum",`Your NutriScore+ is ${calcScore()}/100. Consistency beats perfection.`]);document.getElementById("coachGrid").innerHTML=arr.map(x=>`<div class="card coach"><div class="emoji">${x[0]}</div><h3>${x[1]}</h3><p class="muted">${x[2]}</p><button class="soft-btn" onclick="toast('Action saved for today!')">Take action →</button></div>`).join("");document.getElementById("insightText").textContent=arr[0][2]}
+function renderWater(){let p=Math.min(100,s.water/2500*100);document.getElementById("waterRing").style.setProperty("--p",p);set("waterBig",(s.water/1000).toFixed(1)+"L");document.getElementById("waterTip").textContent=s.water>=2500?"Amazing! You've reached today's hydration goal 🎉":`You're ${2500-s.water} ml away from your goal. A glass now is an easy win.`;bar("challengeBar",Math.min(100,s.water/2500*100));set("challengeText",Math.round(Math.min(100,s.water/2500*100))+"%")}
+function addWater(n){s.water=Math.min(5000,s.water+n);update();toast("💧 "+n+" ml added")}
+function analyzeImage(){let result=document.getElementById("scanResult");result.classList.remove("hidden");let choices=[["🥗 Mixed Healthy Meal",420,19],["🍛 Indian Home Meal",510,21],["🍱 Balanced Lunch Bowl",460,24],["🥣 Healthy Breakfast",350,14]];let x=choices[Math.floor(Math.random()*choices.length)];set("scanFood",x[0]);set("scanCal",x[1]);set("scanProtein",x[2]+"g");toast("✨ Food analysis complete")}
+function addScanned(){let name=document.getElementById("scanFood").textContent.replace(/^.*? /,"");s.foods.push({name:name,e:"📸",cal:+document.getElementById("scanCal").textContent,p:parseInt(document.getElementById("scanProtein").textContent),c:45,f:13,fi:7,meal:"Snack"});update();toast("📸 Scanned meal added to diary")}
+function newPlan(){let p=plans[Math.floor(Math.random()*plans.length)];document.getElementById("plannerGrid").innerHTML=p.map(x=>`<div class="card plan"><span class="tag">${x[0].toUpperCase()}</span><h3>${x[1]}</h3><p class="muted">${x[2]}</p><span class="tag">${x[3]}</span><br><button class="soft-btn" style="margin-top:14px" onclick="toast('Meal saved to your plan!')">Save meal</button></div>`).join("");toast("✨ Fresh balanced plan generated")}
+function renderStatic(){document.getElementById("achievementsGrid").innerHTML=ach.map(x=>`<div class="card achievement ${x[2]?"":"locked"}"><div class="badge">${x[0]}</div><b>${x[1]}</b><p class="muted">${x[2]?"Unlocked":"Keep building"}</p></div>`).join("");document.getElementById("guideGrid").innerHTML=guides.map(x=>`<div class="card guide"><div class="emoji">${x[0]}</div><h3>${x[1]}</h3><p class="muted">${x[2]}</p></div>`).join("");renderGrocery();let vals=[72,83,68,90,77,88,calcScore()],ds=["Thu","Fri","Sat","Sun","Mon","Tue","Today"];document.getElementById("bars").innerHTML=vals.map((x,i)=>`<div class="bar" style="height:${x*1.8}px"><span>${ds[i]}</span></div>`).join("")}
+function renderGrocery(){document.getElementById("groceryGrid").innerHTML=Object.entries(s.grocery).map(([k,v])=>`<div class="card grocery"><h3>${k}</h3>${v.map(x=>`<label><input type="checkbox" onchange="toast(this.checked?'Marked as done ✓':'Added back')"> ${x}</label>`).join("")}</div>`).join("")}
+function addGrocery(){let x=prompt("Add grocery item");if(x){s.grocery["Healthy fats"].push(x);save();renderGrocery();toast(x+" added to grocery list")}}
+function showPage(id){document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));document.getElementById(id).classList.add("active");document.querySelectorAll(".nav button").forEach(x=>x.classList.toggle("active",x.dataset.page===id));let names={dashboard:"Hello, Friend 👋",food:"Food Logger 🍱",scan:"AI Food Scan 📸",planner:"Smart Meal Planner 🥗",coach:"Smart Coach ✦",analytics:"Nutrition Analytics 📊",brief:"NutriSense X Brief ✨",lab:"Health Lab 🧪",command:"Command Center ⚡",impact:"Impact Simulator 🚀",water:"Hydration 💧",achievements:"Achievements 🏆",guide:"Nutrition Guide 📚",grocery:"Smart Grocery List 🛒",profile:"Profile & Goals ⚙"};set("pageTitle",names[id]);scrollTo({top:0,behavior:"smooth"})}
+document.querySelectorAll(".nav button").forEach(x=>x.onclick=()=>showPage(x.dataset.page));
+function saveProfile(e){e.preventDefault();let h=+document.getElementById("height").value,w=+document.getElementById("weight").value;s.focus=document.getElementById("goal").value;let bmi=w/(h/100)**2;set("bmi",bmi.toFixed(1));set("bmiStatus",bmi<18.5?"Low":bmi<25?"Healthy":"Higher");set("dailyGoal",goal());update();toast("Profile updated & targets recalculated")}
+function resetApp(){if(confirm("Reset all demo data?")){localStorage.removeItem(key);location.reload()}}
+function toast(m){let t=document.getElementById("toast");t.textContent=m;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2500)}
+function startApp(){document.getElementById("landing").classList.add("hidden");document.getElementById("app").classList.remove("hidden");if(!localStorage.getItem(key))document.getElementById("onboard").classList.remove("hidden");}
+let chosen="Maintain Weight";document.querySelectorAll(".option").forEach(x=>x.onclick=()=>{document.querySelectorAll(".option").forEach(y=>y.classList.remove("selected"));x.classList.add("selected");chosen=x.dataset.focus});
+function finishOnboarding(){s.focus=chosen;save();document.getElementById("onboard").classList.add("hidden");document.getElementById("goal").value=chosen;update();toast("Welcome to your NutriSense journey! 🌿")}
+document.getElementById("theme").onclick=()=>{document.body.classList.toggle("dark");localStorage.setItem("nutriDark",document.body.classList.contains("dark")?"1":"0")};if(localStorage.getItem("nutriDark")==="1")document.body.classList.add("dark");
+document.getElementById("dateText").textContent=new Date().toLocaleDateString("en-IN",{weekday:"long",day:"numeric",month:"long"});
+
+function renderUltra(){let t=totals(),total=Math.max(1,t.p+t.c+t.f),pp=Math.round(t.p/total*100),cc=Math.round(t.c/total*100),ff=100-pp-cc;if(document.getElementById("macroProtein")){set("macroProtein",pp+"%");set("macroCarbs",cc+"%");set("macroFat",ff+"%")};let lv=[1,3,2,4,2,3,4,2,3,1,2,4,3,4,2,3,4,4,3,2,4,3,4,2,3,4,4,3];let hm=document.getElementById("heatmap");if(hm)hm.innerHTML=lv.map(x=>`<div class="heat l${x}"></div>`).join("");let tl=document.getElementById("timeline");if(tl)tl.innerHTML=[["08:15","🍳 Breakfast logging pattern is building consistency."],["13:20",t.p>=80?"💪 Protein target is on track.":"💪 Protein is your highest-impact improvement area."],["16:40",s.water>=2000?"💧 Hydration is looking strong.":"💧 Hydration has room to improve before evening."],["Now",`✨ NutriScore+ is ${calcScore()}/100 with ${s.foods.length} food entries.`]].map(x=>`<div class="timeline-item"><small class="muted">${x[0]}</small><br><b>${x[1]}</b></div>`).join("");generateBrief()}
+function generateBrief(){let t=totals(),score=calcScore(),p=[];if(t.p<80)p.push(["💪","Protein opportunity",`Add about ${80-t.p}g more protein through familiar foods.`]);if(t.fi<30)p.push(["🥦","Fiber opportunity",`You're at ${t.fi}g logged; fruit or vegetables can improve variety.`]);if(s.water<2000)p.push(["💧","Hydration checkpoint",`${2000-s.water} ml gets you to a strong minimum checkpoint.`]);p.push(["🌟","Keep momentum","Consistency beats perfection."]);let bs=document.getElementById("briefStory");if(bs)bs.textContent=`Today, NutriSense observed ${s.foods.length} meal entries, a NutriScore+ of ${score}/100 and ${s.water} ml hydration. Your next best improvement is ${p[0][1].toLowerCase()}.`;let ps=document.getElementById("priorityStack");if(ps)ps.innerHTML=p.slice(0,3).map((x,i)=>`<div class="feed-item"><b>${i+1}</b><div><b>${x[0]} ${x[1]}</b><br><small class="muted">${x[2]}</small></div></div>`).join("");let il=document.getElementById("impactList");if(il)il.innerHTML=[["📈","Dynamic scoring","Current score recalculates from food and hydration data."],["🧠","Prioritization","The app surfaces the most actionable nutrition gap first."],["🎯","Decision support","Numbers are translated into a clear next action."]].map(x=>`<div class="feed-item"><span>${x[0]}</span><div><b>${x[1]}</b><br><small class="muted">${x[2]}</small></div></div>`).join("");let a=document.getElementById("aiHeadline");if(a)a.textContent=score>=85?"Excellent balance—protect this streak 🌟":score>=70?"Your day is trending healthier with a few smart opportunities ✨":"A couple of focused actions can improve today's balance 🎯"}
+function simulateWhatIf(){let v=document.getElementById("whatif").value,d={fruit:["+4","Fiber","Try it","Adding fruit is projected to improve fiber and food variety.",4],protein:["+6","Protein","Add serving","A protein-rich serving could improve balance.",6],water:["+3","Hydration","Drink water","Hydration progress is projected to rise by 500 ml.",3],skip:["-7","Energy","Avoid","Skipping a meal may reduce energy balance and consistency.",-7]}[v];set("simScore",d[0]);set("simMetric",d[1]);set("simAction",d[2]);set("simText",d[3]);set("labScore",Math.max(0,Math.min(100,calcScore()+d[4])))}
+function applySimulation(){let v=document.getElementById("whatif").value;if(v==="fruit"){s.foods.push({name:"What-if Fruit Snack",e:"🍎",cal:95,p:1,c:25,f:0,fi:4,meal:"Snack"});toast("🍎 Scenario applied")}else if(v==="protein"){s.foods.push({name:"What-if Protein Serving",e:"💪",cal:180,p:20,c:8,f:7,fi:1,meal:"Snack"});toast("💪 Protein scenario applied")}else if(v==="water"){s.water=Math.min(5000,s.water+500);toast("💧 500 ml applied")}else{toast("⚠️ Scenario explored without changing diary");return}update();renderUltra()}
+function openCommand(){document.getElementById("command").classList.remove("hidden");setTimeout(()=>document.getElementById("commandSearch").focus(),50)}function closeCommand(){document.getElementById("command").classList.add("hidden")}function commandGo(p){closeCommand();showPage(p)}function filterCommands(){let q=document.getElementById("commandSearch").value.toLowerCase();document.querySelectorAll("#commandItems .command-item").forEach(x=>x.style.display=x.textContent.toLowerCase().includes(q)?"block":"none")}document.addEventListener("keydown",e=>{if(e.key==="Escape")closeCommand();if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="k"){e.preventDefault();openCommand()}});
+
+
+function renderLegendary(){let t=totals(),score=calcScore();let p=t.p<80?`Protein is currently your highest-leverage opportunity. Add about ${80-t.p}g through familiar foods.`:t.fi<30?`Fiber is the clearest next move. Add roughly ${30-t.fi}g through fruits, vegetables or legumes.`:s.water<2000?`Hydration is the fastest win. Add ${2000-s.water} ml to reach a strong checkpoint.`:`Your nutrition balance is strong. The mission now is consistency.`;let m=document.getElementById('missionPriority');if(m)m.textContent=p;let c=document.getElementById('commandNarrative');if(c)c.textContent=`Today's model has processed ${s.foods.length} meal entries, ${s.water} ml hydration and a NutriScore+ of ${score}/100. The system is now prioritizing your next best action.`;let b=document.getElementById('beforeScore');if(b)b.textContent=score;setImpact('breakfast');}
+function setImpact(mode,btn){if(btn){document.querySelectorAll('#impactStage button').forEach(x=>x.classList.remove('active'));btn.classList.add('active')}let score=calcScore();let d={breakfast:[8,'Consistency','High','Logging breakfast strengthens your most reliable habit anchor.'],protein:[7,'Protein','High','A focused protein addition improves balance and satiety.'],water:[5,'Hydration','Medium','Completing hydration creates an easy, measurable improvement.'],combo:[16,'Whole-day balance','Very High','Combining three small actions creates the strongest projected shift.']}[mode];set('beforeScore',score);set('afterScore',Math.min(100,score+d[0]));set('impactDelta','+'+d[0]);set('impactMetric',d[1]);set('impactLeverage',d[2]);set('afterText',d[3]);}
+const demoSlides=[['WELCOME TO NUTRISENSE X','A nutrition tracker is useful. A system that tells you what matters next is powerful.'],['THE PROBLEM','People see calories, macros and charts—but still do not know what action to take next.'],['THE INTELLIGENCE LAYER','NutriSense X combines food, hydration and habit signals into a prioritized daily narrative.'],['THE DIFFERENCE','Track → Interpret → Simulate → Act. One experience, not disconnected features.'],['THE PAYOFF','Less decision fatigue. More clarity. Better consistency.'],['THANK YOU','NutriSense X — Turning nutrition data into decisions.']];let demoIndex=0;function startDemoTour(){demoIndex=0;renderDemo();document.getElementById('demoOverlay').classList.remove('hidden')}function renderDemo(){let d=demoSlides[demoIndex];set('demoCount',`${demoIndex+1} / ${demoSlides.length}`);set('demoKicker',`JUDGE DEMO · ${String(demoIndex+1).padStart(2,'0')}`);set('demoTitle',d[0]);set('demoText',d[1]);document.getElementById('demoBar').style.width=((demoIndex+1)/demoSlides.length*100)+'%';set('demoNext',demoIndex===demoSlides.length-1?'Close':'Next →')}function nextDemo(){if(demoIndex<demoSlides.length-1){demoIndex++;renderDemo()}else document.getElementById('demoOverlay').classList.add('hidden')}
+
+renderFoods();renderStatic();newPlan();update();renderUltra();renderLegendary();
+
+function applyTheme(mode){let r=mode==='auto'?(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'):mode;document.body.classList.toggle('dark',r==='dark');localStorage.setItem('nutriTheme',mode);['light','dark','auto'].forEach(x=>{let e=document.getElementById(x+'Option');if(e)e.classList.toggle('selected',x===mode)})}
+function setTheme(m){applyTheme(m);toast((m==='dark'?'🌙 Dark':m==='light'?'☀️ Light':'🌓 Auto')+' theme activated')}
+function toggleTheme(){applyTheme(document.body.classList.contains('dark')?'light':'dark')}
+function toggleThemeSettings(){document.getElementById('themeSettings').classList.toggle('show')}
+function setAccent(c,e){document.documentElement.style.setProperty('--green2',c);localStorage.setItem('nutriAccent',c);document.querySelectorAll('.accent').forEach(x=>x.classList.remove('active'));e.classList.add('active')}
+(function(){applyTheme(localStorage.getItem('nutriTheme')||'light');let c=localStorage.getItem('nutriAccent');if(c)document.documentElement.style.setProperty('--green2',c)})();
+
+
+/* FINAL APPEARANCE CONTROLLER — SINGLE EVENT PATH */
+(function(){
+  function panel(){ return document.getElementById('themeSettings'); }
+
+  function applyAppearance(mode){
+    var resolved = mode === 'auto'
+      ? (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+      : mode;
+
+    document.body.classList.toggle('dark', resolved === 'dark');
+    try { localStorage.setItem('nutriTheme', mode); } catch(e) {}
+
+    ['light','dark','auto'].forEach(function(name){
+      var btn = document.getElementById(name + 'Option');
+      if(btn) btn.classList.toggle('selected', name === mode);
+    });
+
+    var legacy = document.getElementById('theme');
+    if(legacy) legacy.textContent = resolved === 'dark' ? '☀' : '☾';
+  }
+
+  window.setTheme = function(mode){
+    applyAppearance(mode);
+    if(typeof window.toast === 'function'){
+      window.toast((mode === 'dark' ? '🌙 Dark' : mode === 'light' ? '☀️ Light' : '🌓 Auto') + ' theme activated');
+    }
+  };
+
+  window.toggleTheme = function(){
+    applyAppearance(document.body.classList.contains('dark') ? 'light' : 'dark');
+  };
+
+  window.setAccent = function(color, el){
+    document.documentElement.style.setProperty('--green2', color);
+    document.documentElement.style.setProperty('--green', color);
+    try { localStorage.setItem('nutriAccent', color); } catch(e) {}
+
+    document.querySelectorAll('.accent').forEach(function(x){
+      x.classList.remove('active');
+    });
+    if(el) el.classList.add('active');
+  };
+
+  window.toggleThemeSettings = function(force){
+    var p = panel();
+    if(!p) return;
+    if(typeof force === 'boolean') p.classList.toggle('show', force);
+    else p.classList.toggle('show');
+  };
+
+  function initAppearance(){
+    var appearanceBtn = document.getElementById('appearanceBtn');
+    if(appearanceBtn){
+      appearanceBtn.addEventListener('click', function(e){
+        e.preventDefault();
+        e.stopPropagation();
+        window.toggleThemeSettings();
+      });
+    }
+
+    document.querySelectorAll('.theme-option').forEach(function(btn){
+      btn.addEventListener('click', function(e){
+        e.preventDefault();
+        e.stopPropagation();
+        var mode = btn.id.replace('Option','');
+        window.setTheme(mode);
+      });
+    });
+
+    document.querySelectorAll('.accent').forEach(function(btn){
+      btn.addEventListener('click', function(e){
+        e.preventDefault();
+        e.stopPropagation();
+        window.setAccent(btn.getAttribute('data-color'), btn);
+      });
+    });
+
+    document.addEventListener('click', function(e){
+      var p = panel();
+      if(!p || !p.classList.contains('show')) return;
+      if(p.contains(e.target)) return;
+      if(appearanceBtn && appearanceBtn.contains(e.target)) return;
+      p.classList.remove('show');
+    });
+
+    var mode = 'light', accent = '';
+    try {
+      mode = localStorage.getItem('nutriTheme') || 'light';
+      accent = localStorage.getItem('nutriAccent') || '';
+    } catch(e) {}
+
+    applyAppearance(mode);
+
+    if(accent){
+      document.documentElement.style.setProperty('--green2', accent);
+      document.documentElement.style.setProperty('--green', accent);
+      document.querySelectorAll('.accent').forEach(function(btn){
+        btn.classList.toggle('active', btn.getAttribute('data-color') === accent);
+      });
+    }
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', initAppearance);
+  } else {
+    initAppearance();
+  }
+})();
+var currentFoodFilter='all';
+function setFoodFilter(filter,btn){currentFoodFilter=filter;document.querySelectorAll('.food-tab').forEach(x=>x.classList.remove('active'));if(btn)btn.classList.add('active');filterHealthyFoods()}
+function filterHealthyFoods(){var q=(document.getElementById('foodSearch')?.value||'').toLowerCase().trim(),visible=0;document.querySelectorAll('#foodGrid .food-item').forEach(card=>{var cat=card.dataset.category||'',text=card.dataset.search||'',show=(currentFoodFilter==='all'||cat===currentFoodFilter)&&(!q||text.includes(q));card.style.display=show?'block':'none';if(show)visible++});var c=document.getElementById('foodCount');if(c)c.textContent=visible+' healthy option'+(visible===1?'':'s')}
+function addHealthyFood(name,calories){if(typeof toast==='function')toast('🥗 '+name+' added to today!');else alert(name+' added to today!')}
+
+/* ===== FOOD PREFERENCE ULTRA ===== */
+var currentFoodFilter='all';
+var currentFoodPreference='all';
+
+function setFoodPreference(pref,btn){
+  currentFoodPreference=pref;
+  document.querySelectorAll('.pref-btn').forEach(function(x){x.classList.remove('active')});
+  if(btn) btn.classList.add('active');
+  try{localStorage.setItem('nutriFoodPreference',pref)}catch(e){}
+  filterHealthyFoods();
+}
+
+function setFoodFilter(filter,btn){
+  currentFoodFilter=filter;
+  document.querySelectorAll('.food-tab').forEach(function(x){x.classList.remove('active')});
+  if(btn) btn.classList.add('active');
+  filterHealthyFoods();
+}
+
+function filterHealthyFoods(){
+  var input=document.getElementById('foodSearch');
+  var q=input?input.value.toLowerCase().trim():'';
+  var visible=0;
+
+  document.querySelectorAll('#foodGrid .food-item').forEach(function(card){
+    var cat=card.getAttribute('data-category')||'';
+    var pref=card.getAttribute('data-pref')||'';
+    var text=card.getAttribute('data-search')||'';
+    var matchCategory=currentFoodFilter==='all'||cat===currentFoodFilter;
+    var matchPreference=currentFoodPreference==='all'||pref===currentFoodPreference;
+    var matchSearch=!q||text.includes(q);
+    var show=matchCategory&&matchPreference&&matchSearch;
+    card.style.display=show?'block':'none';
+    if(show) visible++;
+  });
+
+  var count=document.getElementById('foodCount');
+  if(count) count.textContent=visible+' healthy option'+(visible===1?'':'s');
+}
+
+function addHealthyFood(name,calories){
+  if(typeof toast==='function') toast('🥗 '+name+' added to today!');
+  else alert(name+' added to today!');
+}
+
+document.addEventListener('DOMContentLoaded',function(){
+  var saved='all';
+  try{saved=localStorage.getItem('nutriFoodPreference')||'all'}catch(e){}
+  currentFoodPreference=saved;
+  var active=document.querySelector('.pref-btn[data-pref-choice="'+saved+'"]');
+  if(active){
+    document.querySelectorAll('.pref-btn').forEach(function(x){x.classList.remove('active')});
+    active.classList.add('active');
+  }
+  filterHealthyFoods();
+});
+
+
+/* ===== FOOD LAYOUT SAFETY ===== */
+document.addEventListener('DOMContentLoaded', function(){
+  var lib=document.getElementById('healthyFoodLibrary');
+  if(lib){
+    lib.style.marginLeft='0';
+    lib.style.maxWidth='100%';
+    lib.style.width='100%';
+    lib.style.minWidth='0';
+    lib.style.transform='none';
+  }
+});
+
+</script>
+<div class="theme-settings" id="themeSettings"><h3>🎨 Appearance</h3><p>Choose your premium dashboard style.</p>
+<div class="theme-options"><button class="theme-option" id="lightOption">☀️<br>Light</button><button class="theme-option" id="darkOption">🌙<br>Dark</button><button class="theme-option" id="autoOption">🌓<br>Auto</button></div>
+<div class="accent-row"><button class="accent active" data-color="#2f8f55" style="background:#2f8f55"></button><button class="accent" data-color="#2778d4" style="background:#2778d4"></button><button class="accent" data-color="#9a4fd3" style="background:#9a4fd3"></button><button class="accent" data-color="#e77730" style="background:#e77730"></button><button class="accent" data-color="#d94463" style="background:#d94463"></button></div></div>
+
+
+<section class="food-library" id="healthyFoodLibrary">
+<div class="food-library-head">
+<div><h2>🥗 Smart Healthy Food Library</h2><p>Choose your food preference and discover nutritious options made for you.</p></div>
+<div class="food-count" id="foodCount">60 healthy options</div>
+</div>
+
+<div class="food-preference">
+<button class="pref-btn active" data-pref-choice="all" onclick="setFoodPreference('all',this)">🌍 All Foods<span>Explore everything</span></button>
+<button class="pref-btn" data-pref-choice="veg" onclick="setFoodPreference('veg',this)">🥦 Vegetarian<span>Plant + dairy based meals</span></button>
+<button class="pref-btn" data-pref-choice="nonveg" onclick="setFoodPreference('nonveg',this)">🍗 Non-Vegetarian<span>Egg, chicken & fish options</span></button>
+<button class="pref-btn" data-pref-choice="vegan" onclick="setFoodPreference('vegan',this)">🌱 Vegan<span>100% plant-based choices</span></button>
+</div>
+
+<input id="foodSearch" class="food-search" placeholder="🔎 Search by food, category or preference..." oninput="filterHealthyFoods()">
+
+<div class="food-tabs">
+<button class="food-tab active" onclick="setFoodFilter('all',this)">All</button>
+<button class="food-tab" onclick="setFoodFilter('indian',this)">🇮🇳 Indian</button>
+<button class="food-tab" onclick="setFoodFilter('high protein',this)">💪 Protein</button>
+<button class="food-tab" onclick="setFoodFilter('breakfast',this)">🌅 Breakfast</button>
+<button class="food-tab" onclick="setFoodFilter('fruits',this)">🍎 Fruits</button>
+<button class="food-tab" onclick="setFoodFilter('vegetables',this)">🥦 Veggies</button>
+<button class="food-tab" onclick="setFoodFilter('snacks',this)">🥜 Snacks</button>
+<button class="food-tab" onclick="setFoodFilter('salad',this)">🥗 Salads</button>
+<button class="food-tab" onclick="setFoodFilter('drinks',this)">🥤 Drinks</button>
+</div>
+
+<div class="food-grid" id="foodGrid"><div class="food-item" data-category="breakfast" data-pref="veg" data-search="masala oats breakfast veg 🥦 veg">
+<div class="food-item-top"><span class="food-emoji">🥣</span><span class="food-tag">Breakfast</span></div>
+<div class="food-name">Masala Oats</div>
+<div class="food-meta"><span>240 kcal</span><span>10g protein</span></div>
+<div class="food-type">🥦 Veg</div>
+<button class="add-food-btn" onclick="addHealthyFood('Masala Oats',240)">+ Add to Today</button></div>
+<div class="food-item" data-category="breakfast" data-pref="veg" data-search="overnight oats breakfast veg 🥦 veg">
+<div class="food-item-top"><span class="food-emoji">🥣</span><span class="food-tag">Breakfast</span></div>
+<div class="food-name">Overnight Oats</div>
+<div class="food-meta"><span>280 kcal</span><span>12g protein</span></div>
+<div class="food-type">🥦 Veg</div>
+<button class="add-food-btn" onclick="addHealthyFood('Overnight Oats',280)">+ Add to Today</button></div>
+<div class="food-item" data-category="breakfast" data-pref="veg" data-search="vegetable poha breakfast veg 🥦 veg">
+<div class="food-item-top"><span class="food-emoji">🍚</span><span class="food-tag">Breakfast</span></div>
+<div class="food-name">Vegetable Poha</div>
+<div class="food-meta"><span>270 kcal</span><span>8g protein</span></div>
+<div class="food-type">🥦 Veg</div>
+<button class="add-food-btn" onclick="addHealthyFood('Vegetable Poha',270)">+ Add to Today</button></div>
+<div class="food-item" data-category="breakfast" data-pref="veg" data-search="besan chilla breakfast veg 🥦 veg">
+<div class="food-item-top"><span class="food-emoji">🥞</span><span class="food-tag">Breakfast</span></div>
+<div class="food-name">Besan Chilla</div>
+<div class="food-meta"><span>230 kcal</span><span>12g protein</span></div>
+<div class="food-type">🥦 Veg</div>
+<button class="add-food-btn" onclick="addHealthyFood('Besan Chilla',230)">+ Add to Today</button></div>
+<div class="food-item" data-category="breakfast" data-pref="veg" data-search="moong dal chilla breakfast veg 🥦 veg">
+<div class="food-item-top"><span class="food-emoji">🫘</span><span class="food-tag">Breakfast</span></div>
+<div class="food-name">Moong Dal Chilla</div>
+<div class="food-meta"><span>220 kcal</span><span>14g protein</span></div>
+<div class="food-type">🥦 Veg</div>
+<button class="add-food-btn" onclick="addHealthyFood('Moong Dal Chilla',220)">+ Add to Today</button></div>
+<div class="food-item" data-category="breakfast" data-pref="veg" data-search="veg wholegrain sandwich breakfast veg 🥦 veg">
+<div class="food-item-top"><span class="food-emoji">🥪</span><span class="food-tag">Breakfast</span></div>
+<div class="food-name">Veg Wholegrain Sandwich</div>
+<div class="food-meta"><span>240 kcal</span><span>10g protein</span></div>
+<div class="food-type">🥦 Veg</div>
+<button class="add-food-btn" onclick="addHealthyFood('Veg Wholegrain Sandwich',240)">+ Add to Today</button></div>
+<div class="food-item" data-category="breakfast" data-pref="veg" data-search="peanut butter toast breakfast veg 🥦 veg">
+<div class="food-item-top"><span class="food-emoji">🧈</span><span class="food-tag">Breakfast</span></div>
+<div class="food-name">Peanut Butter Toast</div>
+<div class="food-meta"><span>290 kcal</span><span>11g protein</span></div>
+<div class="food-type">🥦 Veg</div>
+<button class="add-food-btn" onclick="addHealthyFood('Peanut Butter Toast',290)">+ Add to Today</button></div>
+<div class="food-item" data-category="breakfast" data-pref="veg" data-search="daliya bowl breakfast veg 🥦 veg">
+<div class="food-item-top"><span class="food-emoji">🥣</span><span class="food-tag">Breakfast</span></div>
+<div class="food-name">Daliya Bowl</div>
+<div class="food-meta"><span>210 kcal</span><span>7g protein</span></div>
+<div class="food-type">🥦 Veg</div>
+<button class="add-food-btn" onclick="addHealthyFood('Daliya Bowl',210)">+ Add to Today</button></div>
+<div class="food-item" data-category="high protein" data-pref="nonveg" data-search="boiled eggs high protein nonveg 🍗 non-veg">
+<div class="food-item-top"><span class="food-emoji">🍳</span><span class="food-tag">High Protein</span></div>
+<div class="food-name">Boiled Eggs</div>
+<div class="food-meta"><span>156 kcal</span><span>13g protein</span></div>
+<div class="food-type">🍗 Non-Veg</div>
+<button class="add-food-btn" onclick="addHealthyFood('Boiled Eggs',156)">+ Add to Today</button></div>
+<div class="food-item" data-category="high protein" data-pref="nonveg" data-search="egg bhurji high protein nonveg 🍗 non-veg">
+<div class="food-item-top"><span class="food-emoji">🍳</span><span class="food-tag">High Protein</span></div>
+<div class="food-name">Egg Bhurji</div>
+<div class="food-meta"><span>260 kcal</span><span>18g protein</span></div>
+<div class="food-type">🍗 Non-Veg</div>
+<button class="add-food-btn" onclick="addHealthyFood('Egg Bhurji',260)">+ Add to Today</button></div>
+<div class="food-item" data-category="high protein" data-pref="veg" data-search="paneer bhurji high protein veg 🥦 veg">
+<div class="food-item-top"><span class="food-emoji">🧀</span><span class="food-tag">High Protein</span></div>
+<div class="food-name">Paneer Bhurji</div>
+<div class="food-meta"><span>265 kcal</span><span>20g protein</span></div>
+<div class="food-type">🥦 Veg</div>
+<button class="add-food-btn" onclick="addHealthyFood('Paneer Bhurji',265)">+ Add to Today</button></div>
+<div class="food-item" data-category="high protein" data-pref="veg" data-search="greek yogurt high protein veg 🥦 veg">
+<div class="food-item-top"><span class="food-emoji">🥛</span><span class="food-tag">High Protein</span></div>
+<div class="food-name">Greek Yogurt</div>
+<div class="food-meta"><span>130 kcal</span><span>10g protein</span></div>
+<div class="food-type">🥦 Veg</div>
+<button class="add-food-btn" onclick="addHealthyFood('Greek Yogurt',130)">+ Add to Today</button></div>
+<div class="food-item" data-category="high protein" data-pref="veg" data-search="soybean curry high protein veg 🥦 veg">
+<div class="food-item-top"><span class="food-emoji">🧆</span><span class="food-tag">High Protein</span></div>
+<div class="food-name">Soybean Curry</div>
+<div class="food-meta"><span>240 kcal</span><span>19g protein</span></div>
+<div class="food-type">🥦 Veg</div>
+<button class="add-food-btn" onclick="addHealthyFood('Soybean Curry',240)">+ Add to Today</button></div>
+<div class="food-item" data-category="high protein" data-pref="veg" data-search="sprouts chaat high protein veg 🥦 veg">
+<div class="food-item-top"><span class="food-emoji">🫛</span><span class="food-tag">High Protein</span></div>
+<div class="food-name">Sprouts Chaat</div>
+<div class="food-meta"><span>190 kcal</span><span>12g protein</span></div>
+<div class="food-type">🥦 Veg</div>
+<button class="add-food-btn" onclick="addHealthyFood('Sprouts Chaat',190)">+ Add to Today</button></div>
+<div class="food-item" data-category="indian" data-pref="veg" data-search="dal + brown rice indian veg 🥦 veg">
+<div class="food-item-top"><span class="food-emoji">🍲</span><span class="food-tag">Indian</span></div>
+<div class="food-name">Dal + Brown Rice</div>
+<div class="food-meta"><span>410 kcal</span><span>16g protein</span></div>
+<div class="food-type">🥦 Veg</div>
+<button class="add-food-btn" onclick="addHealthyFood('Dal + Brown Rice',410)">+ Add to Today</button></div>
+<div class="food-item" data-category="indian" data-pref="veg" data-search="roti + dal indian veg 🥦 veg">
+<div class="food-item-top"><span class="food-emoji">🫓</span><span class="food-tag">Indian</span></div>
+<div class="food-name">Roti + Dal</div>
+<div class="food-meta"><span>340 kcal</span><span>14g protein</span></div>
+<div class="food-type">🥦 Veg</div>
+<button class="add-food-btn" onclick="addHealthyFood('Roti + Dal',340)">+ Add to Today</button></div>
+<div class="food-item" data-category="indian" data-pref="veg" data-search="rajma + rice indian veg 🥦 veg">
+<div class="food-item-top"><span class="food-emoji">🍛</span><span class="food-tag">Indian</span></div>
+<div class="food-name">Rajma + Rice</div>
+<div class="food-meta"><span>430 kcal</span><span>15g protein</span></div>
+<div class="food-type">🥦 Veg</div>
+<button class="add-food-btn" onclick="addHealthyFood('Rajma + Rice',430)">+ Add to Today</button></div>
+<div class="food-item" data-category="indian" data-pref="veg" data-search="chole + roti indian veg 🥦 veg">
+<div class="food-item-top"><span class="food-emoji">🫘</span><span class="food-tag">Indian</span></div>
+<div class="food-name">Chole + Roti</div>
+<div class="food-meta"><span>390 kcal</span><span>16g protein</span></div>
+<div class="food-type">🥦 Veg</div>
+<button class="add-food-btn" onclick="addHealthyFood('Chole + Roti',390)">+ Add to Today</button></div>
+<div class="food-item" data-category="indian" data-pref="veg" data-search="khichdi + curd indian veg 🥦 veg">
+<div class="food-item-top"><span class="food-emoji">🥣</span><span class="food-tag">Indian</span></div>
+<div class="food-name">Khichdi + Curd</div>
+<div class="food-meta"><span>360 kcal</span><span>13g protein</span></div>
+<div class="food-type">🥦 Veg</div>
+<button class="add-food-btn" onclick="addHealthyFood('Khichdi + Curd',360)">+ Add to Today</button></div>
+<div class="food-item" data-category="indian" data-pref="veg" data-search="palak paneer + roti indian veg 🥦 veg">
+<div class="food-item-top"><span class="food-emoji">🥘</span><span class="food-tag">Indian</span></div>
+<div class="food-name">Palak Paneer + Roti</div>
+<div class="food-meta"><span>420 kcal</span><span>22g protein</span></div>
+<div class="food-type">🥦 Veg</div>
+<button class="add-food-btn" onclick="addHealthyFood('Palak Paneer + Roti',420)">+ Add to Today</button></div>
+<div class="food-item" data-category="indian" data-pref="veg" data-search="sambar + idli indian veg 🥦 veg">
+<div class="food-item-top"><span class="food-emoji">🍲</span><span class="food-tag">Indian</span></div>
+<div class="food-name">Sambar + Idli</div>
+<div class="food-meta"><span>320 kcal</span><span>11g protein</span></div>
+<div class="food-type">🥦 Veg</div>
+<button class="add-food-btn" onclick="addHealthyFood('Sambar + Idli',320)">+ Add to Today</button></div>
+<div class="food-item" data-category="indian" data-pref="veg" data-search="vegetable pulao + raita indian veg 🥦 veg">
+<div class="food-item-top"><span class="food-emoji">🍚</span><span class="food-tag">Indian</span></div>
+<div class="food-name">Vegetable Pulao + Raita</div>
+<div class="food-meta"><span>380 kcal</span><span>10g protein</span></div>
+<div class="food-type">🥦 Veg</div>
+<button class="add-food-btn" onclick="addHealthyFood('Vegetable Pulao + Raita',380)">+ Add to Today</button></div>
+<div class="food-item" data-category="salad" data-pref="veg" data-search="paneer salad salad veg 🥦 veg">
+<div class="food-item-top"><span class="food-emoji">🥗</span><span class="food-tag">Salad</span></div>
+<div class="food-name">Paneer Salad</div>
+<div class="food-meta"><span>250 kcal</span><span>18g protein</span></div>
+<div class="food-type">🥦 Veg</div>
+<button class="add-food-btn" onclick="addHealthyFood('Paneer Salad',250)">+ Add to Today</button></div>
+<div class="food-item" data-category="salad" data-pref="veg" data-search="chickpea salad salad veg 🥦 veg">
+<div class="food-item-top"><span class="food-emoji">🥗</span><span class="food-tag">Salad</span></div>
+<div class="food-name">Chickpea Salad</div>
+<div class="food-meta"><span>230 kcal</span><span>11g protein</span></div>
+<div class="food-type">🥦 Veg</div>
+<button class="add-food-btn" onclick="addHealthyFood('Chickpea Salad',230)">+ Add to Today</button></div>
+<div class="food-item" data-category="salad" data-pref="veg" data-search="quinoa veg bowl salad veg 🥦 veg">
+<div class="food-item-top"><span class="food-emoji">🥗</span><span class="food-tag">Salad</span></div>
+<div class="food-name">Quinoa Veg Bowl</div>
+<div class="food-meta"><span>320 kcal</span><span>12g protein</span></div>
+<div class="food-type">🥦 Veg</div>
+<button class="add-food-btn" onclick="addHealthyFood('Quinoa Veg Bowl',320)">+ Add to Today</button></div>
+<div class="food-item" data-category="vegetables" data-pref="veg" data-search="carrot + cucumber vegetables veg 🥦 veg">
+<div class="food-item-top"><span class="food-emoji">🥕</span><span class="food-tag">Vegetables</span></div>
+<div class="food-name">Carrot + Cucumber</div>
+<div class="food-meta"><span>70 kcal</span><span>2g protein</span></div>
+<div class="food-type">🥦 Veg</div>
+<button class="add-food-btn" onclick="addHealthyFood('Carrot + Cucumber',70)">+ Add to Today</button></div>
+<div class="food-item" data-category="vegetables" data-pref="veg" data-search="broccoli stir fry vegetables veg 🥦 veg">
+<div class="food-item-top"><span class="food-emoji">🥦</span><span class="food-tag">Vegetables</span></div>
+<div class="food-name">Broccoli Stir Fry</div>
+<div class="food-meta"><span>110 kcal</span><span>6g protein</span></div>
+<div class="food-type">🥦 Veg</div>
+<button class="add-food-btn" onclick="addHealthyFood('Broccoli Stir Fry',110)">+ Add to Today</button></div>
+<div class="food-item" data-category="vegetables" data-pref="veg" data-search="palak sabzi vegetables veg 🥦 veg">
+<div class="food-item-top"><span class="food-emoji">🥬</span><span class="food-tag">Vegetables</span></div>
+<div class="food-name">Palak Sabzi</div>
+<div class="food-meta"><span>120 kcal</span><span>5g protein</span></div>
+<div class="food-type">🥦 Veg</div>
+<button class="add-food-btn" onclick="addHealthyFood('Palak Sabzi',120)">+ Add to Today</button></div>
+<div class="food-item" data-category="vegetables" data-pref="veg" data-search="sweet potato bowl vegetables veg 🥦 veg">
+<div class="food-item-top"><span class="food-emoji">🍠</span><span class="food-tag">Vegetables</span></div>
+<div class="food-name">Sweet Potato Bowl</div>
+<div class="food-meta"><span>180 kcal</span><span>4g protein</span></div>
+<div class="food-type">🥦 Veg</div>
+<button class="add-food-btn" onclick="addHealthyFood('Sweet Potato Bowl',180)">+ Add to Today</button></div>
+<div class="food-item" data-category="fruits" data-pref="veg" data-search="apple fruits veg 🥦 veg">
+<div class="food-item-top"><span class="food-emoji">🍎</span><span class="food-tag">Fruits</span></div>
+<div class="food-name">Apple</div>
+<div class="food-meta"><span>95 kcal</span><span>1g protein</span></div>
+<div class="food-type">🥦 Veg</div>
+<button class="add-food-btn" onclick="addHealthyFood('Apple',95)">+ Add to Today</button></div>
+<div class="food-item" data-category="fruits" data-pref="veg" data-search="banana fruits veg 🥦 veg">
+<div class="food-item-top"><span class="food-emoji">🍌</span><span class="food-tag">Fruits</span></div>
+<div class="food-name">Banana</div>
+<div class="food-meta"><span>105 kcal</span><span>1g protein</span></div>
+<div class="food-type">🥦 Veg</div>
+<button class="add-food-btn" onclick="addHealthyFood('Banana',105)">+ Add to Today</button></div>
+<div class="food-item" data-category="fruits" data-pref="veg" data-search="papaya bowl fruits veg 🥦 veg">
+<div class="food-item-top"><span class="food-emoji">🥭</span><span class="food-tag">Fruits</span></div>
+<div class="food-name">Papaya Bowl</div>
+<div class="food-meta"><span>90 kcal</span><span>1g protein</span></div>
+<div class="food-type">🥦 Veg</div>
+<button class="add-food-btn" onclick="addHealthyFood('Papaya Bowl',90)">+ Add to Today</button></div>
+<div class="food-item" data-category="fruits" data-pref="veg" data-search="orange fruits veg 🥦 veg">
+<div class="food-item-top"><span class="food-emoji">🍊</span><span class="food-tag">Fruits</span></div>
+<div class="food-name">Orange</div>
+<div class="food-meta"><span>62 kcal</span><span>1g protein</span></div>
+<div class="food-type">🥦 Veg</div>
+<button class="add-food-btn" onclick="addHealthyFood('Orange',62)">+ Add to Today</button></div>
+<div class="food-item" data-category="fruits" data-pref="veg" data-search="watermelon fruits veg 🥦 veg">
+<div class="food-item-top"><span class="food-emoji">🍉</span><span class="food-tag">Fruits</span></div>
+<div class="food-name">Watermelon</div>
+<div class="food-meta"><span>46 kcal</span><span>1g protein</span></div>
+<div class="food-type">🥦 Veg</div>
+<button class="add-food-btn" onclick="addHealthyFood('Watermelon',46)">+ Add to Today</button></div>
+<div class="food-item" data-category="fruits" data-pref="veg" data-search="mixed berry bowl fruits veg 🥦 veg">
+<div class="food-item-top"><span class="food-emoji">🍇</span><span class="food-tag">Fruits</span></div>
+<div class="food-name">Mixed Berry Bowl</div>
+<div class="food-meta"><span>85 kcal</span><span>1g protein</span></div>
+<div class="food-type">🥦 Veg</div>
+<button class="add-food-btn" onclick="addHealthyFood('Mixed Berry Bowl',85)">+ Add to Today</button></div>
+<div class="food-item" data-category="fruits" data-pref="veg" data-search="guava fruits veg 🥦 veg">
+<div class="food-item-top"><span class="food-emoji">🍐</span><span class="food-tag">Fruits</span></div>
+<div class="food-name">Guava</div>
+<div class="food-meta"><span>68 kcal</span><span>3g protein</span></div>
+<div class="food-type">🥦 Veg</div>
+<button class="add-food-btn" onclick="addHealthyFood('Guava',68)">+ Add to Today</button></div>
+<div class="food-item" data-category="snacks" data-pref="veg" data-search="almonds snacks veg 🥦 veg">
+<div class="food-item-top"><span class="food-emoji">🥜</span><span class="food-tag">Snacks</span></div>
+<div class="food-name">Almonds</div>
+<div class="food-meta"><span>164 kcal</span><span>6g protein</span></div>
+<div class="food-type">🥦 Veg</div>
+<button class="add-food-btn" onclick="addHealthyFood('Almonds',164)">+ Add to Today</button></div>
+<div class="food-item" data-category="snacks" data-pref="veg" data-search="walnuts snacks veg 🥦 veg">
+<div class="food-item-top"><span class="food-emoji">🌰</span><span class="food-tag">Snacks</span></div>
+<div class="food-name">Walnuts</div>
+<div class="food-meta"><span>185 kcal</span><span>4g protein</span></div>
+<div class="food-type">🥦 Veg</div>
+<button class="add-food-btn" onclick="addHealthyFood('Walnuts',185)">+ Add to Today</button></div>
+<div class="food-item" data-category="snacks" data-pref="veg" data-search="roasted makhana snacks veg 🥦 veg">
+<div class="food-item-top"><span class="food-emoji">🍿</span><span class="food-tag">Snacks</span></div>
+<div class="food-name">Roasted Makhana</div>
+<div class="food-meta"><span>120 kcal</span><span>4g protein</span></div>
+<div class="food-type">🥦 Veg</div>
+<button class="add-food-btn" onclick="addHealthyFood('Roasted Makhana',120)">+ Add to Today</button></div>
+<div class="food-item" data-category="snacks" data-pref="veg" data-search="roasted chana snacks veg 🥦 veg">
+<div class="food-item-top"><span class="food-emoji">🫘</span><span class="food-tag">Snacks</span></div>
+<div class="food-name">Roasted Chana</div>
+<div class="food-meta"><span>140 kcal</span><span>7g protein</span></div>
+<div class="food-type">🥦 Veg</div>
+<button class="add-food-btn" onclick="addHealthyFood('Roasted Chana',140)">+ Add to Today</button></div>
+<div class="food-item" data-category="snacks" data-pref="veg" data-search="peanut chaat snacks veg 🥦 veg">
+<div class="food-item-top"><span class="food-emoji">🥜</span><span class="food-tag">Snacks</span></div>
+<div class="food-name">Peanut Chaat</div>
+<div class="food-meta"><span>180 kcal</span><span>8g protein</span></div>
+<div class="food-type">🥦 Veg</div>
+<button class="add-food-btn" onclick="addHealthyFood('Peanut Chaat',180)">+ Add to Today</button></div>
+<div class="food-item" data-category="snacks" data-pref="veg" data-search="baked multigrain chips snacks veg 🥦 veg">
+<div class="food-item-top"><span class="food-emoji">🍘</span><span class="food-tag">Snacks</span></div>
+<div class="food-name">Baked Multigrain Chips</div>
+<div class="food-meta"><span>130 kcal</span><span>3g protein</span></div>
+<div class="food-type">🥦 Veg</div>
+<button class="add-food-btn" onclick="addHealthyFood('Baked Multigrain Chips',130)">+ Add to Today</button></div>
+<div class="food-item" data-category="high protein" data-pref="nonveg" data-search="grilled chicken breast high protein nonveg 🍗 non-veg">
+<div class="food-item-top"><span class="food-emoji">🍗</span><span class="food-tag">High Protein</span></div>
+<div class="food-name">Grilled Chicken Breast</div>
+<div class="food-meta"><span>220 kcal</span><span>40g protein</span></div>
+<div class="food-type">🍗 Non-Veg</div>
+<button class="add-food-btn" onclick="addHealthyFood('Grilled Chicken Breast',220)">+ Add to Today</button></div>
+<div class="food-item" data-category="high protein" data-pref="nonveg" data-search="grilled fish high protein nonveg 🍗 non-veg">
+<div class="food-item-top"><span class="food-emoji">🐟</span><span class="food-tag">High Protein</span></div>
+<div class="food-name">Grilled Fish</div>
+<div class="food-meta"><span>200 kcal</span><span>32g protein</span></div>
+<div class="food-type">🍗 Non-Veg</div>
+<button class="add-food-btn" onclick="addHealthyFood('Grilled Fish',200)">+ Add to Today</button></div>
+<div class="food-item" data-category="salad" data-pref="nonveg" data-search="chicken salad salad nonveg 🍗 non-veg">
+<div class="food-item-top"><span class="food-emoji">🍗</span><span class="food-tag">Salad</span></div>
+<div class="food-name">Chicken Salad</div>
+<div class="food-meta"><span>260 kcal</span><span>35g protein</span></div>
+<div class="food-type">🍗 Non-Veg</div>
+<button class="add-food-btn" onclick="addHealthyFood('Chicken Salad',260)">+ Add to Today</button></div>
+<div class="food-item" data-category="indian" data-pref="nonveg" data-search="chicken curry + roti indian nonveg 🍗 non-veg">
+<div class="food-item-top"><span class="food-emoji">🍛</span><span class="food-tag">Indian</span></div>
+<div class="food-name">Chicken Curry + Roti</div>
+<div class="food-meta"><span>460 kcal</span><span>38g protein</span></div>
+<div class="food-type">🍗 Non-Veg</div>
+<button class="add-food-btn" onclick="addHealthyFood('Chicken Curry + Roti',460)">+ Add to Today</button></div>
+<div class="food-item" data-category="indian" data-pref="nonveg" data-search="fish curry + rice indian nonveg 🍗 non-veg">
+<div class="food-item-top"><span class="food-emoji">🐟</span><span class="food-tag">Indian</span></div>
+<div class="food-name">Fish Curry + Rice</div>
+<div class="food-meta"><span>430 kcal</span><span>30g protein</span></div>
+<div class="food-type">🍗 Non-Veg</div>
+<button class="add-food-btn" onclick="addHealthyFood('Fish Curry + Rice',430)">+ Add to Today</button></div>
+<div class="food-item" data-category="lunch" data-pref="nonveg" data-search="chicken wrap lunch nonveg 🍗 non-veg">
+<div class="food-item-top"><span class="food-emoji">🍗</span><span class="food-tag">Lunch</span></div>
+<div class="food-name">Chicken Wrap</div>
+<div class="food-meta"><span>390 kcal</span><span>32g protein</span></div>
+<div class="food-type">🍗 Non-Veg</div>
+<button class="add-food-btn" onclick="addHealthyFood('Chicken Wrap',390)">+ Add to Today</button></div>
+<div class="food-item" data-category="salad" data-pref="nonveg" data-search="egg salad salad nonveg 🍗 non-veg">
+<div class="food-item-top"><span class="food-emoji">🥚</span><span class="food-tag">Salad</span></div>
+<div class="food-name">Egg Salad</div>
+<div class="food-meta"><span>240 kcal</span><span>20g protein</span></div>
+<div class="food-type">🍗 Non-Veg</div>
+<button class="add-food-btn" onclick="addHealthyFood('Egg Salad',240)">+ Add to Today</button></div>
+<div class="food-item" data-category="high protein" data-pref="nonveg" data-search="tandoori chicken high protein nonveg 🍗 non-veg">
+<div class="food-item-top"><span class="food-emoji">🍗</span><span class="food-tag">High Protein</span></div>
+<div class="food-name">Tandoori Chicken</div>
+<div class="food-meta"><span>280 kcal</span><span>42g protein</span></div>
+<div class="food-type">🍗 Non-Veg</div>
+<button class="add-food-btn" onclick="addHealthyFood('Tandoori Chicken',280)">+ Add to Today</button></div>
+<div class="food-item" data-category="drinks" data-pref="veg" data-search="protein smoothie drinks veg 🥦 veg">
+<div class="food-item-top"><span class="food-emoji">🥤</span><span class="food-tag">Drinks</span></div>
+<div class="food-name">Protein Smoothie</div>
+<div class="food-meta"><span>210 kcal</span><span>22g protein</span></div>
+<div class="food-type">🥦 Veg</div>
+<button class="add-food-btn" onclick="addHealthyFood('Protein Smoothie',210)">+ Add to Today</button></div>
+<div class="food-item" data-category="drinks" data-pref="veg" data-search="buttermilk drinks veg 🥦 veg">
+<div class="food-item-top"><span class="food-emoji">🥤</span><span class="food-tag">Drinks</span></div>
+<div class="food-name">Buttermilk</div>
+<div class="food-meta"><span>60 kcal</span><span>3g protein</span></div>
+<div class="food-type">🥦 Veg</div>
+<button class="add-food-btn" onclick="addHealthyFood('Buttermilk',60)">+ Add to Today</button></div>
+<div class="food-item" data-category="drinks" data-pref="vegan" data-search="coconut water drinks vegan 🌱 vegan">
+<div class="food-item-top"><span class="food-emoji">🥥</span><span class="food-tag">Drinks</span></div>
+<div class="food-name">Coconut Water</div>
+<div class="food-meta"><span>45 kcal</span><span>1g protein</span></div>
+<div class="food-type">🌱 Vegan</div>
+<button class="add-food-btn" onclick="addHealthyFood('Coconut Water',45)">+ Add to Today</button></div>
+<div class="food-item" data-category="light meal" data-pref="vegan" data-search="vegetable soup light meal vegan 🌱 vegan">
+<div class="food-item-top"><span class="food-emoji">🍲</span><span class="food-tag">Light Meal</span></div>
+<div class="food-name">Vegetable Soup</div>
+<div class="food-meta"><span>110 kcal</span><span>4g protein</span></div>
+<div class="food-type">🌱 Vegan</div>
+<button class="add-food-btn" onclick="addHealthyFood('Vegetable Soup',110)">+ Add to Today</button></div>
+<div class="food-item" data-category="vegan" data-pref="vegan" data-search="tofu buddha bowl vegan vegan 🌱 vegan">
+<div class="food-item-top"><span class="food-emoji">🥗</span><span class="food-tag">Vegan</span></div>
+<div class="food-name">Tofu Buddha Bowl</div>
+<div class="food-meta"><span>290 kcal</span><span>18g protein</span></div>
+<div class="food-type">🌱 Vegan</div>
+<button class="add-food-btn" onclick="addHealthyFood('Tofu Buddha Bowl',290)">+ Add to Today</button></div>
+<div class="food-item" data-category="vegan" data-pref="vegan" data-search="black bean bowl vegan vegan 🌱 vegan">
+<div class="food-item-top"><span class="food-emoji">🫘</span><span class="food-tag">Vegan</span></div>
+<div class="food-name">Black Bean Bowl</div>
+<div class="food-meta"><span>310 kcal</span><span>16g protein</span></div>
+<div class="food-type">🌱 Vegan</div>
+<button class="add-food-btn" onclick="addHealthyFood('Black Bean Bowl',310)">+ Add to Today</button></div>
+<div class="food-item" data-category="vegan" data-pref="vegan" data-search="vegan chana bowl vegan vegan 🌱 vegan">
+<div class="food-item-top"><span class="food-emoji">🍛</span><span class="food-tag">Vegan</span></div>
+<div class="food-name">Vegan Chana Bowl</div>
+<div class="food-meta"><span>340 kcal</span><span>15g protein</span></div>
+<div class="food-type">🌱 Vegan</div>
+<button class="add-food-btn" onclick="addHealthyFood('Vegan Chana Bowl',340)">+ Add to Today</button></div>
+<div class="food-item" data-category="vegan" data-pref="vegan" data-search="lentil salad vegan vegan 🌱 vegan">
+<div class="food-item-top"><span class="food-emoji">🥗</span><span class="food-tag">Vegan</span></div>
+<div class="food-name">Lentil Salad</div>
+<div class="food-meta"><span>260 kcal</span><span>14g protein</span></div>
+<div class="food-type">🌱 Vegan</div>
+<button class="add-food-btn" onclick="addHealthyFood('Lentil Salad',260)">+ Add to Today</button></div>
+<div class="food-item" data-category="vegan" data-pref="vegan" data-search="oats + almond milk vegan vegan 🌱 vegan">
+<div class="food-item-top"><span class="food-emoji">🥣</span><span class="food-tag">Vegan</span></div>
+<div class="food-name">Oats + Almond Milk</div>
+<div class="food-meta"><span>250 kcal</span><span>9g protein</span></div>
+<div class="food-type">🌱 Vegan</div>
+<button class="add-food-btn" onclick="addHealthyFood('Oats + Almond Milk',250)">+ Add to Today</button></div>
+<div class="food-item" data-category="vegan" data-pref="vegan" data-search="tofu palak vegan vegan 🌱 vegan">
+<div class="food-item-top"><span class="food-emoji">🥬</span><span class="food-tag">Vegan</span></div>
+<div class="food-name">Tofu Palak</div>
+<div class="food-meta"><span>210 kcal</span><span>17g protein</span></div>
+<div class="food-type">🌱 Vegan</div>
+<button class="add-food-btn" onclick="addHealthyFood('Tofu Palak',210)">+ Add to Today</button></div></div>
+</section>
+
+</body></html>
